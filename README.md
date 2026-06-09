@@ -1,0 +1,1 @@
+# worldcup-pool-2026
