@@ -152,7 +152,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 //    Then paste that URL below (it will look similar to this one)
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/16PaPzQofq0Almk8xH19X3Rx9IpK4PI2r3rCXxXDDrBw/export?format=csv&gid=2084502933';
 // 2. Get a FREE API key at: https://www.football-data.org/client/register
-const API_KEY = 'YOUR_API_KEY_HERE';
+const API_KEY = '4b7b78f60fa543ada585c5815f2aac24';
 const WC_CODE = 'WC';
 // ============================================================
 
@@ -289,7 +289,7 @@ function fmtDate(d){return new Date(d).toLocaleString([],{weekday:'short',month:
 async function loadMatchData(when) {
   const cid=when==='today'?'scores-content':'fixtures-content';
   document.getElementById(cid).innerHTML='<div class="loading">Loading...</div>';
-  if(API_KEY==='YOUR_API_KEY_HERE'){
+  if(API_KEY==='4b7b78f60fa543ada585c5815f2aac24'){
     document.getElementById(cid).innerHTML='<div class="info-msg">Setup needed: Get a free API key from <a href="https://www.football-data.org/client/register" target="_blank">football-data.org</a> and paste it into this file as the API_KEY value.</div>';return;
   }
   try {
@@ -322,7 +322,7 @@ async function loadMatchData(when) {
 
 async function loadGroupStandings() {
   document.getElementById('groups-content').innerHTML='<div class="loading">Loading...</div>';
-  if(API_KEY==='YOUR_API_KEY_HERE'){
+  if(API_KEY==='4b7b78f60fa543ada585c5815f2aac24'){
     document.getElementById('groups-content').innerHTML='<div class="info-msg">Setup needed: Get a free API key from <a href="https://www.football-data.org/client/register" target="_blank">football-data.org</a> and paste it into this file as the API_KEY value.</div>';return;
   }
   try {
