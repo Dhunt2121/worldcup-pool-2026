@@ -57,6 +57,581 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 .loading{text-align:center;padding:40px;color:var(--muted);font-size:.9rem}
 .error-msg{background:#fff3f3;border:1px solid #fca5a5;color:var(--red);padding:12px 16px;border-radius:8px;font-size:.85rem;margin-bottom:12px}
 .info-msg{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;padding:12px 16px;border-radius:8px;font-size:.85rem;margin-bottom:12px}
+.success-msg{background:#f0fdf4;border:1px solid #86efac;color:#166534;padding:12px 16px;border-radius:8px;font-size:.85rem;margin-bottom:12px}
+.refresh-btn{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.82rem;margin-left:auto;display:block;margin-bottom:12px}
+.refresh-btn:hover{background:#1e4d78}
+.last-updated{font-size:.75rem;color:var(--muted);text-align:center;margin-top:-8px;margin-bottom:12px}
+.rules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.rule-section h3{font-size:.9rem;color:var(--primary);margin-bottom:8px;font-weight:700}
+.rule-section ul{list-style:none}
+.rule-section li{padding:4px 0;font-size:.85rem}
+.rule-section li::before{content:'-> ';color:var(--accent);font-weight:700}
+.score-breakdown{font-size:.75rem;color:var(--muted);margin-top:2px}
+.api-status{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;padding:3px 8px;border-radius:10px;margin-bottom:8px}
+.api-ok{background:#f0fdf4;color:#166534;border:1px solid #86efac}
+.api-err{background:#fff3f3;color:var(--red);border:1px solid #fca5a5}
+</style>
+</head>
+<body>
+<header>
+<div class="trophy">🏆</div>
+<h1>2026 FIFA World Cup Pool</h1>
+<p>Live Standings · Auto-Scoring · Scores · Fixtures · Group Stage</p>
+<nav>
+<button class="active" onclick="showTab('standings',this)">🏅 Pool Standings</button>
+<button onclick="showTab('picks',this)">🗂 Picks</button>
+<button onclick="showTab('scores',this)">⚽ Today's Scores</button>
+<button onclick="showTab('fixtures',this)">📅 Tomorrow's Fixtures</button>
+<button onclick="showTab('groups',this)">📊 Group Stage</button>
+<button onclick="showTab('rules',this)">📋 Rules</button>
+</nav>
+</header>
+<main>
+<div id="tab-standings" class="tab-panel active">
+<button class="refresh-btn" onclick="fullRefresh()">&#8635; Refresh Everything</button>
+<div id="standings-last-updated" class="last-updated"></div>
+<div id="api-status-bar"></div>
+<div class="card"><h2>🏅 Pool Standings</h2><div id="standings-content"><div class="loading">Loading...</div></div></div>
+<div class="card"><h2>📌 How Auto-Scoring Works</h2><div class="info-msg">
+Scores are <strong>automatically calculated</strong> by fetching live World Cup results from the football-data.org API every time you refresh.<br><br>
+Group stage: match points (W=3, D=1) × tier multiplier + group finish bonus.<br>
+Knockout rounds: progression bonuses auto-detected from match results.<br>
+Double team gets 2× their full multiplied score. Golden Boot = 10 pts flat.
+</div></div>
+</div>
+<div id="tab-picks" class="tab-panel">
+<button class="refresh-btn" onclick="fullRefresh()">&#8635; Refresh Picks</button>
+<div class="card"><h2>🗂 Participant Selections <span style="font-size:.8rem;color:var(--muted)">(click to expand)</span></h2><div id="picks-content"><div class="loading">Loading...</div></div></div>
+</div>
+<div id="tab-scores" class="tab-panel">
+<button class="refresh-btn" onclick="loadMatchData('today')">&#8635; Refresh Scores</button>
+<div id="scores-last-updated" class="last-updated"></div>
+<div id="scores-content"><div class="loading">Loading...</div></div>
+</div>
+<div id="tab-fixtures" class="tab-panel">
+<button class="refresh-btn" onclick="loadMatchData('tomorrow')">&#8635; Refresh Fixtures</button>
+<div id="fixtures-content"><div class="loading">Loading...</div></div>
+</div>
+<div id="tab-groups" class="tab-panel">
+<button class="refresh-btn" onclick="loadGroupStandings()">&#8635; Refresh</button>
+<div id="groups-last-updated" class="last-updated"></div>
+<div id="groups-content"><div class="loading">Loading...</div></div>
+</div>
+<div id="tab-rules" class="tab-panel">
+<div class="card"><h2>📋 Pool Rules</h2>
+<div class="rules-grid">
+<div class="rule-section"><h3>🟢 Group Stage</h3><ul>
+<li>1 pt per real match point (win=3, draw=1)</li>
+<li>1 pt for advancing as best 3rd</li>
+<li>3 pts for finishing 2nd in group</li>
+<li>5 pts for winning the group</li>
+</ul></div>
+<div class="rule-section"><h3>🔵 Knockout Bonuses</h3><ul>
+<li>5 pts - Round of 16</li><li>10 pts - Quarterfinals</li>
+<li>15 pts - Semifinals</li><li>20 pts - Final</li><li>30 pts - Champions 🏆</li>
+</ul></div>
+<div class="rule-section"><h3>✖ Tier Multipliers</h3><ul>
+<li>Tier 1 - 1x (Spain, France, England)</li>
+<li>Tier 2 - 1.5x (Brazil, Portugal, Argentina, Germany)</li>
+<li>Tier 3 - 2x (Netherlands, Norway, Belgium, Morocco)</li>
+<li>Tier 4 - 2.5x (Colombia, Mexico, Switzerland, USA)</li>
+<li>Tier 5 - 3x (Senegal, Japan, Uruguay, Ecuador, Turkiye, Croatia)</li>
+<li>Tier 6 - 4x (Sweden, Austria, Canada, Scotland)</li>
+<li>Tier 7 - 5x (Cote d'Ivoire, Czechia, South Korea, Egypt, Ghana)</li>
+<li>Tier 8 - 5.5x (Paraguay, Algeria, Bosnia, Tunisia, Australia)</li>
+<li>Tier 9 - 6x (Iran, Saudi Arabia, South Africa, Cape Verde, DR Congo)</li>
+<li>Tier 10 - 8x (Qatar, Uzbekistan, New Zealand, Panama)</li>
+<li>Tier 11 - 10x (Curacao, Jordan, Haiti, Iraq)</li>
+</ul></div>
+<div class="rule-section"><h3>⭐ Special Rules</h3><ul>
+<li>Double team = 2x their multiplied points</li>
+<li>Golden Boot correct pick = 10 pts flat</li>
+<li>Tiebreaker: age of youngest goalscorer in days</li>
+</ul></div>
+</div></div>
+</div>
+</main>
+<script>
+// ============================================================
+// CONFIGURATION — only this section needs editing
+// ============================================================
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/16PaPzQofq0Almk8xH19X3Rx9IpK4PI2r3rCXxXDDrBw/export?format=csv&gid=2084502933';
+const API_KEY = 'YOUR_API_KEY_HERE';  // https://www.football-data.org/client/register (free)
+const WC_CODE = 'WC';
+// Optional: set the Golden Boot winner's name once known (must match their form pick)
+const GOLDEN_BOOT_WINNER = '';
+// ============================================================
+
+// ── TIER DEFINITIONS ──
+const TIERS = {
+  'Spain':{t:1,m:1},'France':{t:1,m:1},'England':{t:1,m:1},
+  'Brazil':{t:2,m:1.5},'Portugal':{t:2,m:1.5},'Argentina':{t:2,m:1.5},'Germany':{t:2,m:1.5},
+  'Netherlands':{t:3,m:2},'Norway':{t:3,m:2},'Belgium':{t:3,m:2},'Morocco':{t:3,m:2},
+  'Colombia':{t:4,m:2.5},'Mexico':{t:4,m:2.5},'Switzerland':{t:4,m:2.5},'United States':{t:4,m:2.5},
+  'Senegal':{t:5,m:3},'Japan':{t:5,m:3},'Uruguay':{t:5,m:3},'Ecuador':{t:5,m:3},'Turkiye':{t:5,m:3},'Croatia':{t:5,m:3},
+  'Sweden':{t:6,m:4},'Austria':{t:6,m:4},'Canada':{t:6,m:4},'Scotland':{t:6,m:4},
+  "Cote D'Ivoire":{t:7,m:5},'Czechia':{t:7,m:5},'South Korea':{t:7,m:5},'Egypt':{t:7,m:5},'Ghana':{t:7,m:5},
+  'Paraguay':{t:8,m:5.5},'Algeria':{t:8,m:5.5},'Bosnia & Herezegovnia':{t:8,m:5.5},'Tunisia':{t:8,m:5.5},'Australia':{t:8,m:5.5},
+  'Iran':{t:9,m:6},'Saudi Arabia':{t:9,m:6},'South Africa':{t:9,m:6},'Cape Verde':{t:9,m:6},'DR Congo':{t:9,m:6},
+  'Qatar':{t:10,m:8},'Uzbekistan':{t:10,m:8},'New Zealand':{t:10,m:8},'Panama':{t:10,m:8},
+  'Curacao':{t:11,m:10},'Jordan':{t:11,m:10},'Haiti':{t:11,m:10},'Iraq':{t:11,m:10}
+};
+
+// ── API NAME → POOL NAME MAPPING ──
+// Maps football-data.org team names to the names used in pool tiers
+const API_TO_POOL = {
+  'Spain':'Spain','France':'France','England':'England',
+  'Brazil':'Brazil','Portugal':'Portugal','Argentina':'Argentina','Germany':'Germany',
+  'Netherlands':'Netherlands','Norway':'Norway','Belgium':'Belgium','Morocco':'Morocco',
+  'Colombia':'Colombia','Mexico':'Mexico','Switzerland':'Switzerland',
+  'United States':'United States','USA':'United States',
+  'Senegal':'Senegal','Japan':'Japan','Uruguay':'Uruguay','Ecuador':'Ecuador',
+  'Turkey':'Turkiye','Türkiye':'Turkiye','Croatia':'Croatia',
+  'Sweden':'Sweden','Austria':'Austria','Canada':'Canada','Scotland':'Scotland',
+  "Côte d'Ivoire":'Cote D'Ivoire',"Ivory Coast":'Cote D'Ivoire',"Cote d'Ivoire":'Cote D'Ivoire',
+  'Czech Republic':'Czechia','Czechia':'Czechia',
+  'South Korea':'South Korea','Republic of Korea':'South Korea','Korea Republic':'South Korea',
+  'Egypt':'Egypt','Ghana':'Ghana',
+  'Paraguay':'Paraguay','Algeria':'Algeria',
+  'Bosnia and Herzegovina':'Bosnia & Herezegovnia','Bosnia & Herzegovina':'Bosnia & Herezegovnia',
+  'Tunisia':'Tunisia','Australia':'Australia',
+  'Iran':'Iran','Saudi Arabia':'Saudi Arabia','South Africa':'South Africa',
+  'Cape Verde':'Cape Verde','DR Congo':'DR Congo','Congo DR':'DR Congo',"Congo, DR":'DR Congo',
+  'Qatar':'Qatar','Uzbekistan':'Uzbekistan','New Zealand':'New Zealand','Panama':'Panama',
+  'Curacao':'Curacao','Curaçao':'Curacao',
+  'Jordan':'Jordan','Haiti':'Haiti','Iraq':'Iraq'
+};
+
+function toPoolName(apiName) {
+  return API_TO_POOL[apiName] || apiName;
+}
+
+// ── STATE ──
+let RESULTS = {};   // auto-populated by fetchTournamentResults()
+let poolData = [], standingsData = [];
+let apiWorking = false;
+
+// ── CORE: FETCH ALL TOURNAMENT RESULTS FROM API ──
+async function fetchTournamentResults() {
+  if (API_KEY === 'YOUR_API_KEY_HERE') return false;
+  try {
+    // 1. Get all finished matches to calculate group stage points
+    const matchRes = await fetch(
+      'https://api.football-data.org/v4/competitions/' + WC_CODE + '/matches?status=FINISHED',
+      { headers: { 'X-Auth-Token': API_KEY } }
+    );
+    if (!matchRes.ok) throw new Error('Matches API ' + matchRes.status);
+    const matchData = await matchRes.json();
+    const matches = matchData.matches || [];
+
+    // Reset results
+    RESULTS = {};
+
+    // Count group stage points from finished matches
+    for (const m of matches) {
+      const stage = m.stage || '';
+      const isGroup = stage.includes('GROUP') || stage === 'GROUP_STAGE';
+      if (!isGroup) continue;
+
+      const homeApi = m.homeTeam?.name;
+      const awayApi = m.awayTeam?.name;
+      const hs = m.score?.fullTime?.home;
+      const as = m.score?.fullTime?.away;
+      if (hs === null || hs === undefined || as === null || as === undefined) continue;
+
+      const home = toPoolName(homeApi);
+      const away = toPoolName(awayApi);
+      if (!RESULTS[home]) RESULTS[home] = { pts: 0, groupFinish: null, r16: false, qf: false, sf: false, final: false, winner: false };
+      if (!RESULTS[away]) RESULTS[away] = { pts: 0, groupFinish: null, r16: false, qf: false, sf: false, final: false, winner: false };
+
+      if (hs > as) { RESULTS[home].pts += 3; }
+      else if (hs < as) { RESULTS[away].pts += 3; }
+      else { RESULTS[home].pts += 1; RESULTS[away].pts += 1; }
+    }
+
+    // 2. Get group standings for groupFinish (1st/2nd/3rd)
+    try {
+      const standRes = await fetch(
+        'https://api.football-data.org/v4/competitions/' + WC_CODE + '/standings',
+        { headers: { 'X-Auth-Token': API_KEY } }
+      );
+      if (standRes.ok) {
+        const standData = await standRes.json();
+        const groups = (standData.standings || []).filter(s => s.type === 'TOTAL');
+        for (const g of groups) {
+          const table = g.table || [];
+          // Top 2 in each group advance automatically; best 3rds also advance (FIFA 2026 format: 12 groups, top 2 + 8 best 3rds)
+          table.forEach((row, idx) => {
+            const name = toPoolName(row.team?.name);
+            if (!RESULTS[name]) RESULTS[name] = { pts: 0, groupFinish: null, r16: false, qf: false, sf: false, final: false, winner: false };
+            RESULTS[name].groupFinish = idx + 1; // 1-based position
+          });
+        }
+      }
+    } catch(e) { /* standings optional */ }
+
+    // 3. Detect knockout progression from matches
+    for (const m of matches) {
+      const stage = m.stage || '';
+      const homeApi = m.homeTeam?.name;
+      const awayApi = m.awayTeam?.name;
+      const hs = m.score?.fullTime?.home;
+      const as = m.score?.fullTime?.away;
+      const penHome = m.score?.penalties?.home;
+      const penAway = m.score?.penalties?.away;
+      if (!homeApi || !awayApi) continue;
+
+      const home = toPoolName(homeApi);
+      const away = toPoolName(awayApi);
+      if (!RESULTS[home]) RESULTS[home] = { pts: 0, groupFinish: null, r16: false, qf: false, sf: false, final: false, winner: false };
+      if (!RESULTS[away]) RESULTS[away] = { pts: 0, groupFinish: null, r16: false, qf: false, sf: false, final: false, winner: false };
+
+      // Determine winner (considering penalties)
+      let winner = null, loser = null;
+      if (hs !== null && as !== null) {
+        if (hs > as) { winner = home; loser = away; }
+        else if (as > hs) { winner = away; loser = home; }
+        else if (penHome !== null && penAway !== null) {
+          if (penHome > penAway) { winner = home; loser = away; }
+          else { winner = away; loser = home; }
+        }
+      }
+
+      if (stage === 'ROUND_OF_16' || stage === 'LAST_16') {
+        // Both teams made R16 (they are playing in it); winner goes to QF
+        RESULTS[home].r16 = true; RESULTS[away].r16 = true;
+      }
+      if (stage === 'QUARTER_FINALS') {
+        RESULTS[home].qf = true; RESULTS[away].qf = true;
+      }
+      if (stage === 'SEMI_FINALS') {
+        RESULTS[home].sf = true; RESULTS[away].sf = true;
+      }
+      if (stage === 'FINAL') {
+        RESULTS[home].final = true; RESULTS[away].final = true;
+        if (winner) RESULTS[winner].winner = true;
+      }
+      if (stage === 'THIRD_PLACE') {
+        // Both made semis, mark them as having made final-4
+        RESULTS[home].sf = true; RESULTS[away].sf = true;
+      }
+    }
+
+    // Also mark teams that haven't played knockout matches yet but are in R16/QF based on standings
+    // (groups completed but knockout not started - groupFinish 1 or 2 means they made R16)
+    for (const [team, data] of Object.entries(RESULTS)) {
+      if (data.groupFinish === 1 || data.groupFinish === 2) {
+        // Check if group stage is done (they have 3 played games)
+        // We'll trust the standings data - if they're shown as 1st or 2nd, they advance
+        // but only set r16 if we haven't already detected their R16 match
+      }
+    }
+
+    apiWorking = true;
+    return true;
+  } catch(e) {
+    console.error('fetchTournamentResults error:', e);
+    apiWorking = false;
+    return false;
+  }
+}
+
+// ── UI STATUS BAR ──
+function updateApiStatusBar() {
+  const bar = document.getElementById('api-status-bar');
+  if (API_KEY === 'YOUR_API_KEY_HERE') {
+    bar.innerHTML = '<div class="info-msg">⚙️ <strong>API key not set.</strong> Scores show 0 until you add your free key from <a href="https://www.football-data.org/client/register" target="_blank">football-data.org</a> and update the API_KEY in this file on GitHub.</div>';
+  } else if (apiWorking) {
+    bar.innerHTML = '<span class="api-status api-ok">✅ Live API connected — scores auto-updating</span>';
+  } else {
+    bar.innerHTML = '<span class="api-status api-err">⚠️ API unavailable — scores may not update</span>';
+  }
+}
+
+// ── FULL REFRESH ──
+async function fullRefresh() {
+  document.getElementById('standings-content').innerHTML = '<div class="loading">Fetching live tournament data...</div>';
+  document.getElementById('picks-content').innerHTML = '<div class="loading">Loading...</div>';
+  await fetchTournamentResults();
+  updateApiStatusBar();
+  await loadPoolData();
+}
+
+// ── PARSE CSV ──
+function parseCSV(text) {
+  const rows = []; const lines = text.split(/
+?
+/);
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const cols = []; let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') { inQ = !inQ; continue; }
+      if (line[i] === ',' && !inQ) { cols.push(cur); cur = ''; continue; }
+      cur += line[i];
+    }
+    cols.push(cur); rows.push(cols);
+  }
+  return rows;
+}
+
+function esc(s) { if (!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── SCORE CALCULATION ──
+function calcScore(p) {
+  let total = 0;
+  const breakdown = [];
+  const keys = ['tier1','tier2','tier3','tier4','tier5','tier6','tier7','tier8','tier9','tier10','tier11'];
+  for (const k of keys) {
+    const team = p[k];
+    if (!team || !TIERS[team]) continue;
+    const r = RESULTS[team];
+    if (!r) continue;
+    let pts = 0;
+    pts += (r.pts || 0);
+    if (r.groupFinish === 1) pts += 5;
+    else if (r.groupFinish === 2) pts += 3;
+    else if (r.groupFinish === 3) pts += 1;
+    if (r.r16) pts += 5;
+    if (r.qf) pts += 10;
+    if (r.sf) pts += 15;
+    if (r.final) pts += 20;
+    if (r.winner) pts += 30;
+    let mult = TIERS[team].m;
+    const isDouble = p.double && p.double.toLowerCase() === team.toLowerCase();
+    if (isDouble) mult *= 2;
+    const teamTotal = pts * mult;
+    if (teamTotal > 0) breakdown.push(team + ': ' + teamTotal.toFixed(1));
+    total += teamTotal;
+  }
+  if (p.goldenBoot && GOLDEN_BOOT_WINNER && p.goldenBoot.toLowerCase() === GOLDEN_BOOT_WINNER.toLowerCase()) {
+    total += 10;
+    breakdown.push('Golden Boot: 10');
+  }
+  return { score: Math.round(total * 10) / 10, breakdown };
+}
+
+// ── LOAD POOL DATA ──
+async function loadPoolData() {
+  try {
+    const proxy = 'https://corsproxy.io/?' + encodeURIComponent(SHEET_CSV_URL);
+    const r = await fetch(proxy);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const csv = await r.text();
+    const rows = parseCSV(csv);
+    if (rows.length < 2) {
+      const msg = '<div class="info-msg">No submissions yet.</div>';
+      document.getElementById('standings-content').innerHTML = msg;
+      document.getElementById('picks-content').innerHTML = msg;
+      return;
+    }
+    poolData = rows.slice(1).filter(r => r[1] && r[1].trim()).map(row => ({
+      timestamp: row[0]?.trim(), name: row[1]?.trim(),
+      tier1: row[2]?.trim(), tier2: row[3]?.trim(), tier3: row[4]?.trim(), tier4: row[5]?.trim(),
+      tier5: row[6]?.trim(), tier6: row[7]?.trim(), tier7: row[8]?.trim(), tier8: row[9]?.trim(),
+      tier9: row[10]?.trim(), tier10: row[11]?.trim(), tier11: row[12]?.trim(),
+      double: row[13]?.trim(), goldenBoot: row[14]?.trim(), tiebreaker: row[15]?.trim()
+    }));
+    standingsData = poolData.map(p => { const {score, breakdown} = calcScore(p); return {...p, score, breakdown}; })
+      .sort((a, b) => b.score - a.score);
+    renderStandings();
+    renderPicks();
+    document.getElementById('standings-last-updated').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+  } catch(e) {
+    const err = '<div class="error-msg">Could not load sheet: ' + e.message + '<br><strong>Fix:</strong> In Google Sheets: File > Share > Publish to web > select sheet > CSV > Publish.</div>';
+    document.getElementById('standings-content').innerHTML = err;
+    document.getElementById('picks-content').innerHTML = err;
+  }
+}
+
+function renderStandings() {
+  if (!standingsData.length) { document.getElementById('standings-content').innerHTML = '<div class="info-msg">No submissions yet.</div>'; return; }
+  let html = '<table class="standings-table"><thead><tr><th>#</th><th>Participant</th><th>Score</th><th>Double Team</th><th>Golden Boot</th></tr></thead><tbody>';
+  standingsData.forEach((p, i) => {
+    const sym = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
+    const rc = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const bk = p.breakdown && p.breakdown.length ? '<div class="score-breakdown">'+p.breakdown.join(' · ')+'</div>' : '';
+    html += '<tr><td class="rank '+rc+'">'+sym+'</td><td><strong>'+esc(p.name)+'</strong>'+bk+'</td><td><strong>'+(p.score>0?p.score:'—')+'</strong></td><td>'+(p.double?'<span class="double-badge">2x</span> '+esc(p.double):'—')+'</td><td class="golden-boot">'+(p.goldenBoot?'⚽ '+esc(p.goldenBoot):'—')+'</td></tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('standings-content').innerHTML = html;
+}
+
+function renderPicks() {
+  if (!standingsData.length) { document.getElementById('picks-content').innerHTML = '<div class="info-msg">No submissions yet.</div>'; return; }
+  const tiers = [['tier1','Tier 1 (1x)'],['tier2','Tier 2 (1.5x)'],['tier3','Tier 3 (2x)'],['tier4','Tier 4 (2.5x)'],['tier5','Tier 5 (3x)'],['tier6','Tier 6 (4x)'],['tier7','Tier 7 (5x)'],['tier8','Tier 8 (5.5x)'],['tier9','Tier 9 (6x)'],['tier10','Tier 10 (8x)'],['tier11','Tier 11 (10x)']];
+  let html = '<div class="participant-list">';
+  standingsData.forEach((p, i) => {
+    html += '<div class="participant-card"><div class="p-header" onclick="tp('+i+')"><h3>'+esc(p.name)+'</h3><span class="p-score">'+(p.score>0?p.score+' pts':'Pending')+'</span></div><div class="p-body" id="pb'+i+'">';
+    for (const [k, lbl] of tiers) {
+      const team = p[k] || '';
+      const dbl = p.double && p.double.toLowerCase() === team.toLowerCase();
+      const r = RESULTS[team];
+      let teamPts = '';
+      if (r && (r.pts > 0 || r.r16 || r.qf || r.sf || r.final || r.winner)) {
+        let t=r.pts||0; if(r.groupFinish===1)t+=5; else if(r.groupFinish===2)t+=3; else if(r.groupFinish===3)t+=1;
+        if(r.r16)t+=5; if(r.qf)t+=10; if(r.sf)t+=15; if(r.final)t+=20; if(r.winner)t+=30;
+        const mult = TIERS[team] ? (dbl ? TIERS[team].m*2 : TIERS[team].m) : 1;
+        teamPts = ' <small style="color:var(--green);font-weight:600">('+Math.round(t*mult*10)/10+' pts)</small>';
+      }
+      html += '<div class="tier-row"><span class="tier-label">'+lbl+'</span><span class="tier-team">'+(esc(team)||'<em style="color:#ccc">—</em>')+(dbl?' <span class="double-badge">2x</span>':'')+teamPts+'</span></div>';
+    }
+    html += '<div class="tier-row"><span class="tier-label">Golden Boot</span><span class="golden-boot">'+(esc(p.goldenBoot)||'—')+'</span></div>';
+    html += '<div class="tier-row"><span class="tier-label">Tiebreaker</span><span style="color:var(--muted)">'+(esc(p.tiebreaker)||'—')+'</span></div>';
+    html += '<div class="tier-row" style="font-size:.74rem;color:var(--muted)"><span>Submitted</span><span>'+(esc(p.timestamp)||'—')+'</span></div>';
+    html += '</div></div>';
+  });
+  html += '</div>';
+  document.getElementById('picks-content').innerHTML = html;
+}
+
+function tp(i) { document.getElementById('pb'+i).classList.toggle('open'); }
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'scores') loadMatchData('today');
+  if (id === 'fixtures') loadMatchData('tomorrow');
+  if (id === 'groups') loadGroupStandings();
+}
+
+// ── FLAGS ──
+const FLAGS = {'Spain':'🇪🇸','France':'🇫🇷','England':'🏴','Brazil':'🇧🇷','Portugal':'🇵🇹','Argentina':'🇦🇷','Germany':'🇩🇪','Netherlands':'🇳🇱','Belgium':'🇧🇪','Morocco':'🇲🇦','Colombia':'🇨🇴','Mexico':'🇲🇽','Switzerland':'🇨🇭','United States':'🇺🇸','USA':'🇺🇸','Senegal':'🇸🇳','Japan':'🇯🇵','Uruguay':'🇺🇾','Ecuador':'🇪🇨','Turkey':'🇹🇷','Türkiye':'🇹🇷','Croatia':'🇭🇷','Sweden':'🇸🇪','Austria':'🇦🇹','Canada':'🇨🇦','Scotland':'🏴','Ivory Coast':'🇨🇮',"Côte d'Ivoire":'🇨🇮','Czech Republic':'🇨🇿','South Korea':'🇰🇷','Korea Republic':'🇰🇷','Egypt':'🇪🇬','Ghana':'🇬🇭','Paraguay':'🇵🇾','Algeria':'🇩🇿','Bosnia and Herzegovina':'🇧🇦','Tunisia':'🇹🇳','Australia':'🇦🇺','Iran':'🇮🇷','Saudi Arabia':'🇸🇦','South Africa':'🇿🇦','Cape Verde':'🇨🇻','Qatar':'🇶🇦','Uzbekistan':'🇺🇿','New Zealand':'🇳🇿','Panama':'🇵🇦','Curaçao':'🇨🇼','Jordan':'🇯🇴','Haiti':'🇭🇹','Iraq':'🇮🇶','Norway':'🇳🇴','DR Congo':'🇨🇩'};
+function getFlag(n) { return FLAGS[n] || '🏳️'; }
+function fmtDate(d) { return new Date(d).toLocaleString([], {weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
+
+async function loadMatchData(when) {
+  const cid = when === 'today' ? 'scores-content' : 'fixtures-content';
+  document.getElementById(cid).innerHTML = '<div class="loading">Loading...</div>';
+  if (API_KEY === 'YOUR_API_KEY_HERE') {
+    document.getElementById(cid).innerHTML = '<div class="info-msg">Add your free API key from <a href="https://www.football-data.org/client/register" target="_blank">football-data.org</a> to see live scores and fixtures.</div>';
+    return;
+  }
+  try {
+    const today = new Date(), target = when === 'tomorrow' ? new Date(today.getTime() + 86400000) : today;
+    const ds = target.toISOString().split('T')[0];
+    const res = await fetch('https://api.football-data.org/v4/competitions/' + WC_CODE + '/matches?dateFrom=' + ds + '&dateTo=' + ds, { headers: { 'X-Auth-Token': API_KEY } });
+    if (!res.ok) throw new Error('API ' + res.status);
+    const data = await res.json();
+    const matches = data.matches || [];
+    if (!matches.length) { document.getElementById(cid).innerHTML = '<div class="info-msg">No World Cup matches ' + (when==='today'?'today':'tomorrow') + '.</div>'; return; }
+    const byStage = {};
+    for (const m of matches) { const s = m.stage || 'Match'; if (!byStage[s]) byStage[s] = []; byStage[s].push(m); }
+    let html = '';
+    for (const [stage, ms] of Object.entries(byStage)) {
+      html += '<div class="card"><h2>' + stage.replace(/_/g,' ') + '</h2>';
+      for (const m of ms) {
+        const h = m.homeTeam?.name||'TBD', a = m.awayTeam?.name||'TBD';
+        const hs = m.score?.fullTime?.home, as = m.score?.fullTime?.away;
+        let st = '';
+        if (m.status==='IN_PLAY'||m.status==='PAUSED') st='<span class="status-live">🔴 LIVE</span>';
+        else if (m.status==='FINISHED') st='<span class="status-ft">✅ FT</span>';
+        else st='<span>'+fmtDate(m.utcDate)+'</span>';
+        html += '<div class="match-card"><div style="display:flex;align-items:center;gap:10px;flex:1"><div class="team-block"><span class="flag">'+getFlag(h)+'</span><span class="team-name">'+esc(h)+'</span></div><div class="score-block"><span>'+(hs!=null?hs:'—')+'</span><span style="color:var(--muted)">:</span><span>'+(as!=null?as:'—')+'</span></div><div class="team-block"><span class="flag">'+getFlag(a)+'</span><span class="team-name">'+esc(a)+'</span></div></div><div class="match-meta">'+st+'</div></div>';
+      }
+      html += '</div>';
+    }
+    document.getElementById(cid).innerHTML = html;
+    if (when === 'today') document.getElementById('scores-last-updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+  } catch(e) { document.getElementById(cid).innerHTML = '<div class="error-msg">' + e.message + '</div>'; }
+}
+
+async function loadGroupStandings() {
+  document.getElementById('groups-content').innerHTML = '<div class="loading">Loading...</div>';
+  if (API_KEY === 'YOUR_API_KEY_HERE') {
+    document.getElementById('groups-content').innerHTML = '<div class="info-msg">Add your free API key to see group standings.</div>';
+    return;
+  }
+  try {
+    const res = await fetch('https://api.football-data.org/v4/competitions/' + WC_CODE + '/standings', { headers: { 'X-Auth-Token': API_KEY } });
+    if (!res.ok) throw new Error('API ' + res.status);
+    const data = await res.json();
+    const groups = (data.standings || []).filter(s => s.type === 'TOTAL');
+    if (!groups.length) { document.getElementById('groups-content').innerHTML = '<div class="info-msg">Group standings not available yet.</div>'; return; }
+    let html = '<div class="group-grid">';
+    for (const g of groups) {
+      html += '<div class="group-card"><h3>' + (g.group||'Group') + '</h3><table class="group-table"><thead><tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody>';
+      for (const t of g.table || []) {
+        html += '<tr><td>'+getFlag(t.team?.name)+' '+esc(t.team?.name)+'</td><td>'+t.playedGames+'</td><td>'+t.won+'</td><td>'+t.draw+'</td><td>'+t.lost+'</td><td>'+t.goalsFor+'</td><td>'+t.goalsAgainst+'</td><td>'+(t.goalDifference>0?'+'+t.goalDifference:t.goalDifference)+'</td><td><strong>'+t.points+'</strong></td></tr>';
+      }
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+    document.getElementById('groups-content').innerHTML = html;
+    document.getElementById('groups-last-updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+  } catch(e) { document.getElementById('groups-content').innerHTML = '<div class="error-msg">'+e.message+'</div>'; }
+}
+
+// ── INIT: fetch tournament data first, then pool data ──
+(async function() {
+  updateApiStatusBar();
+  await fetchTournamentResults();
+  updateApiStatusBar();
+  await loadPoolData();
+})();
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 World Cup Pool Dashboard</title>
+<style>
+:root{--primary:#1a3c5e;--accent:#c8a84b;--green:#2d7a4f;--red:#c0392b;--light:#f4f6f9;--card:#fff;--border:#dde1e7;--text:#1e2532;--muted:#6b7280}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--light);color:var(--text)}
+header{background:linear-gradient(135deg,#0a2342 0%,#1a3c5e 60%,#0d5c2e 100%);color:#fff;padding:20px 24px 0;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+header h1{font-size:1.9rem;letter-spacing:.5px;margin-bottom:4px}
+header p{color:rgba(255,255,255,.65);font-size:.85rem;margin-bottom:16px}
+.trophy{font-size:2.2rem;margin-bottom:6px}
+nav{display:flex;justify-content:center;gap:2px;flex-wrap:wrap}
+nav button{background:rgba(255,255,255,.12);border:none;color:rgba(255,255,255,.75);padding:10px 18px;font-size:.88rem;cursor:pointer;border-radius:8px 8px 0 0;transition:all .2s;font-weight:500}
+nav button.active,nav button:hover{background:var(--light);color:var(--primary);font-weight:600}
+main{max-width:1200px;margin:0 auto;padding:24px 16px}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.card{background:var(--card);border-radius:12px;padding:20px 22px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:20px;border:1px solid var(--border)}
+.card h2{font-size:1.05rem;color:var(--primary);margin-bottom:14px;border-bottom:2px solid var(--accent);padding-bottom:8px;display:flex;align-items:center;gap:8px}
+.standings-table{width:100%;border-collapse:collapse;font-size:.88rem}
+.standings-table th{background:var(--primary);color:#fff;padding:10px 12px;text-align:left}
+.standings-table th:not(:first-child){text-align:center}
+.standings-table td{padding:9px 12px;border-bottom:1px solid var(--border)}
+.standings-table td:not(:first-child){text-align:center}
+.standings-table tr:hover td{background:#f0f4ff}
+.rank{font-weight:700}.rank-1{color:#c8a84b}.rank-2{color:#aaa}.rank-3{color:#cd7f32}
+.participant-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.participant-card{background:var(--card);border-radius:10px;border:1px solid var(--border);box-shadow:0 1px 6px rgba(0,0,0,.05);overflow:hidden}
+.p-header{background:var(--primary);color:#fff;padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.p-header:hover{background:#1e4d78}
+.p-score{background:var(--accent);color:var(--primary);padding:3px 10px;border-radius:20px;font-weight:700;font-size:.85rem}
+.p-body{padding:14px 16px;display:none}.p-body.open{display:block}
+.tier-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px dashed #eee;font-size:.83rem}
+.tier-label{color:var(--muted);font-size:.78rem}.tier-team{font-weight:600}
+.double-badge{background:var(--green);color:#fff;font-size:.72rem;padding:2px 6px;border-radius:4px;margin-left:6px}
+.golden-boot{color:var(--accent);font-weight:600}
+.match-card{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;background:var(--card);gap:8px}
+.team-block{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:80px}
+.team-name{font-size:.82rem;font-weight:600;text-align:center}
+.flag{font-size:1.4rem}
+.score-block{display:flex;align-items:center;gap:8px;font-size:1.3rem;font-weight:700;color:var(--primary)}
+.match-meta{font-size:.75rem;color:var(--muted);text-align:right;min-width:80px}
+.status-live{color:#e53935;font-weight:700;animation:pulse 1.2s infinite}
+.status-ft{color:var(--green);font-weight:600}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.group-card{background:var(--card);border-radius:10px;border:1px solid var(--border);overflow:hidden}
+.group-card h3{background:var(--primary);color:#fff;padding:10px 14px;font-size:.9rem}
+.group-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.group-table th{background:#f0f3f8;padding:7px 8px;text-align:center;color:var(--muted);font-size:.75rem}
+.group-table th:first-child{text-align:left}
+.group-table td{padding:7px 8px;border-bottom:1px solid #f0f0f0;text-align:center}
+.group-table td:first-child{text-align:left;font-weight:600}
+.group-table tr:nth-child(2) td,.group-table tr:nth-child(3) td{background:#edfbf0}
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:.9rem}
+.error-msg{background:#fff3f3;border:1px solid #fca5a5;color:var(--red);padding:12px 16px;border-radius:8px;font-size:.85rem;margin-bottom:12px}
+.info-msg{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;padding:12px 16px;border-radius:8px;font-size:.85rem;margin-bottom:12px}
 .refresh-btn{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.82rem;margin-left:auto;display:block;margin-bottom:12px}
 .refresh-btn:hover{background:#1e4d78}
 .last-updated{font-size:.75rem;color:var(--muted);text-align:center;margin-top:-8px;margin-bottom:12px}
