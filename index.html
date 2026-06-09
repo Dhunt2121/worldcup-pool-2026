@@ -156,7 +156,7 @@ Double team gets 2× their full multiplied score. Golden Boot = 10 pts flat.
 // CONFIGURATION — only this section needs editing
 // ============================================================
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/16PaPzQofq0Almk8xH19X3Rx9IpK4PI2r3rCXxXDDrBw/export?format=csv&gid=2084502933';
-const API_KEY = 'YOUR_API_KEY_HERE';  // https://www.football-data.org/client/register (free)
+const API_KEY = '4b7b78f60fa543ada585c5815f2aac24';  // https://www.football-data.org/client/register (free)
 const WC_CODE = 'WC';
 // Optional: set the Golden Boot winner's name once known (must match their form pick)
 const GOLDEN_BOOT_WINNER = '';
@@ -213,7 +213,7 @@ let apiWorking = false;
 
 // ── CORE: FETCH ALL TOURNAMENT RESULTS FROM API ──
 async function fetchTournamentResults() {
-  if (API_KEY === 'YOUR_API_KEY_HERE') return false;
+  if (API_KEY === '4b7b78f60fa543ada585c5815f2aac24') return false;
   try {
     // 1. Get all finished matches to calculate group stage points
     const matchRes = await fetch(
@@ -339,7 +339,7 @@ async function fetchTournamentResults() {
 // ── UI STATUS BAR ──
 function updateApiStatusBar() {
   const bar = document.getElementById('api-status-bar');
-  if (API_KEY === 'YOUR_API_KEY_HERE') {
+  if (API_KEY === '4b7b78f60fa543ada585c5815f2aac24') {
     bar.innerHTML = '<div class="info-msg">⚙️ <strong>API key not set.</strong> Scores show 0 until you add your free key from <a href="https://www.football-data.org/client/register" target="_blank">football-data.org</a> and update the API_KEY in this file on GitHub.</div>';
   } else if (apiWorking) {
     bar.innerHTML = '<span class="api-status api-ok">✅ Live API connected — scores auto-updating</span>';
@@ -505,7 +505,7 @@ function fmtDate(d) { return new Date(d).toLocaleString([], {weekday:'short',mon
 async function loadMatchData(when) {
   const cid = when === 'today' ? 'scores-content' : 'fixtures-content';
   document.getElementById(cid).innerHTML = '<div class="loading">Loading...</div>';
-  if (API_KEY === 'YOUR_API_KEY_HERE') {
+  if (API_KEY === '4b7b78f60fa543ada585c5815f2aac24') {
     document.getElementById(cid).innerHTML = '<div class="info-msg">Add your free API key from <a href="https://www.football-data.org/client/register" target="_blank">football-data.org</a> to see live scores and fixtures.</div>';
     return;
   }
@@ -540,7 +540,7 @@ async function loadMatchData(when) {
 
 async function loadGroupStandings() {
   document.getElementById('groups-content').innerHTML = '<div class="loading">Loading...</div>';
-  if (API_KEY === 'YOUR_API_KEY_HERE') {
+  if (API_KEY === '4b7b78f60fa543ada585c5815f2aac24') {
     document.getElementById('groups-content').innerHTML = '<div class="info-msg">Add your free API key to see group standings.</div>';
     return;
   }
