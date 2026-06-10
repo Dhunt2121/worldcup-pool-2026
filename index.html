@@ -134,8 +134,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 </main>
 <script>
 const API_KEY = '4b7b78f60fa543ada585c5815f2aac24';
-const SHEET_ID = '16PaPzQofq0Almk8xH19X3Rx9IpK4PI2r3rCXxXDDrBw';
-const SHEET_GID = '2084502933';
+const SHEET_CSV = 'https://corsproxy.io/?' + encodeURIComponent('https://docs.google.com/spreadsheets/d/e/2PACX-1vSZOF_or5NjbIHLnQrCcSFaNlsbBvCpfizhNcPzictpw0ikAigYKDJhSoFd4a697n3oRoomn6o6jtEv/pub?gid=2084502933&single=true&output=csv');
 const API_BASE = 'https://api.football-data.org/v4';
 const COMP = 'WC';
 const PROXY = 'https://corsproxy.io/?';
@@ -264,7 +263,7 @@ function renderPicks(ps) {
   ps.forEach((p,idx) => {
     html += `<div class="pick-card"><h3 onclick="togglePick(${idx})"><span>${esc(p.name)}</span><span>&#9660;</span></h3>
       <div id="pick-${idx}" class="pick-details">
-        ${tKeys.map((k,i)=>p[k]?`<div class="pick-item"><strong>${tLabels[i]}</strong>${esc(p[k])}</div>`:'').join('')}
+        ${tKeys.map((k,ii)=>p[k]?`<div class="pick-item"><strong>${tLabels[ii]}</strong>${esc(p[k])}</div>`:'').join('')}
         <div class="pick-item"><strong>Double Points</strong>${esc(p.double||'—')}</div>
         <div class="pick-item"><strong>Golden Boot</strong>${esc(p.goldenBoot||'—')}</div>
         <div class="pick-item"><strong>Tiebreaker</strong>${esc(p.tiebreaker||'—')}</div>
@@ -315,7 +314,6 @@ function renderGroups(standings) {
 }
 
 async function apiGet(path) {
-  if (!API_KEY||API_KEY==='YOUR_API_KEY_HERE') return null;
   try {
     const r = await fetch(PROXY+encodeURIComponent(API_BASE+path),{headers:{'X-Auth-Token':API_KEY}});
     if (!r.ok) return null;
@@ -324,25 +322,23 @@ async function apiGet(path) {
 }
 
 async function loadPoolData() {
-  const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
   try {
-    const r = await fetch(PROXY + encodeURIComponent(csvUrl));
+    const r = await fetch(SHEET_CSV);
     const text = await r.text();
-    // Validate it's actually CSV (first line should be headers with commas)
     const firstLine = text.split('\n')[0]||'';
     if (!firstLine.includes(',') || firstLine.toLowerCase().includes('<html') || firstLine.toLowerCase().includes('<!doctype')) {
-      const msg = '<div class="warn-box"><strong>&#9888; Google Sheet not yet published as CSV.</strong><br><br>To fix this:<ol style="margin-top:8px;padding-left:18px;line-height:2"><li>Open your <a href="https://docs.google.com/spreadsheets/d/' + SHEET_ID + '" target="_blank">Google Sheet</a></li><li>Click <strong>File &rarr; Share &rarr; Publish to web</strong></li><li>Select <strong>Form Responses 1</strong> sheet and <strong>CSV</strong> format</li><li>Click <strong>Publish</strong> and confirm</li><li>Refresh this page</li></ol></div>';
+      const msg = '<div class="warn-box"><strong>&#9888; Google Sheet not yet published as CSV.</strong><br><br>To fix: Open your Google Sheet &rarr; File &rarr; Share &rarr; Publish to web &rarr; select Form Responses 1 &rarr; CSV &rarr; Publish.</div>';
       document.getElementById('standings-container').innerHTML = msg;
       document.getElementById('picks-container').innerHTML = msg;
       return [];
     }
     const rows = parseCSV(text);
-    const ps = rows.map(buildParticipant).filter(p=>p.name && p.name!=='Submission Name' && !p.name.includes('function'));
+    const ps = rows.map(buildParticipant).filter(p=>p.name && p.name!=='Submission Name' && !p.name.includes('{'));
     renderStandings(ps);
     renderPicks(ps);
     return ps;
   } catch(e) {
-    const msg = '<div class="error-msg">Could not load pool data. Make sure the Google Sheet is published (File &rarr; Share &rarr; Publish to web &rarr; CSV).</div>';
+    const msg = '<div class="error-msg">Could not load pool data: ' + e.message + '</div>';
     document.getElementById('standings-container').innerHTML = msg;
     document.getElementById('picks-container').innerHTML = msg;
     return [];
@@ -397,16 +393,16 @@ async function loadDayMatches() {
   tom.setDate(tom.getDate()+1);
   const fmt=d=>d.toISOString().split('T')[0];
   const td=await apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(today)}&dateTo=${fmt(today)}`);
-  if (!td) { document.getElementById('scores-container').innerHTML='<div class="warn-box">Add your API key to see live scores.</div>'; }
-  else renderMatches(td.matches,'scores-container','No World Cup matches today.');
+  if (!td) { document.getElementById('scores-container').innerHTML='<div class="warn-box">Could not load today\'s scores from API.</div>'; }
+  else renderMatches(td.matches,'scores-container','No World Cup matches scheduled today.');
   const tm=await apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(tom)}&dateTo=${fmt(tom)}`);
-  if (!tm) { document.getElementById('fixtures-container').innerHTML='<div class="warn-box">Add your API key to see fixtures.</div>'; }
-  else renderMatches(tm.matches,'fixtures-container','No World Cup matches tomorrow.');
+  if (!tm) { document.getElementById('fixtures-container').innerHTML='<div class="warn-box">Could not load tomorrow\'s fixtures from API.</div>'; }
+  else renderMatches(tm.matches,'fixtures-container','No World Cup matches scheduled tomorrow.');
 }
 
 async function loadGroupStandings() {
   const data=await apiGet('/competitions/'+COMP+'/standings');
-  if (!data) { document.getElementById('groups-container').innerHTML='<div class="warn-box">Add your API key to see group standings.</div>'; return; }
+  if (!data) { document.getElementById('groups-container').innerHTML='<div class="warn-box">Could not load group standings from API.</div>'; return; }
   const all=[];
   if (data.standings) data.standings.forEach(g=>{ if(g.type!=='TOTAL') return; g.table.forEach(e=>all.push({...e,group:g.group})); });
   renderGroups(all);
