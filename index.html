@@ -38,15 +38,19 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 .pick-details.open{display:grid}
 .pick-item{background:var(--light);border-radius:8px;padding:8px 12px;font-size:.85rem}
 .pick-item strong{display:block;color:var(--muted);font-size:.75rem;margin-bottom:2px}
-.match-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.match-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .match-teams{flex:1;min-width:200px}
 .match-teams .home,.match-teams .away{font-weight:600;font-size:.95rem}
-.match-score{font-size:1.4rem;font-weight:800;color:var(--primary);padding:0 16px;white-space:nowrap}
+.match-score{font-size:1.4rem;font-weight:800;color:var(--primary);padding:0 12px;white-space:nowrap;min-width:60px;text-align:center}
 .match-meta{font-size:.78rem;color:var(--muted);margin-top:3px}
-.match-status{font-size:.78rem;padding:3px 8px;border-radius:10px;font-weight:600}
+.match-info{text-align:right;min-width:160px}
+.match-info .kickoff{font-weight:700;font-size:.95rem;color:var(--primary)}
+.match-info .venue{font-size:.78rem;color:var(--muted);margin-top:2px}
+.match-status{font-size:.78rem;padding:3px 8px;border-radius:10px;font-weight:600;display:inline-block;margin-top:4px}
 .status-ft{background:#e8f5e9;color:#2e7d32}
 .status-live{background:#fff3e0;color:#e65100}
 .status-sched{background:#e3f2fd;color:#1565c0}
+.matchday-header{font-size:1rem;font-weight:700;color:var(--primary);margin:16px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--accent)}
 .group-table{width:100%;border-collapse:collapse;font-size:.87rem;margin-bottom:20px}
 .group-table th{background:var(--primary);color:#fff;padding:8px 10px;text-align:center}
 .group-table th:first-child{text-align:left}
@@ -61,11 +65,16 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 .error-msg{background:#fff3f3;border:1px solid #fca5a5;border-radius:8px;padding:14px;color:#c0392b;font-size:.88rem;margin-bottom:16px}
 .info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px;font-size:.87rem;line-height:1.6}
 .warn-box{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:14px;font-size:.87rem;line-height:1.6}
+.lock-box{background:linear-gradient(135deg,#1a3c5e,#0d5c2e);border-radius:12px;padding:32px 24px;text-align:center;color:#fff}
+.lock-box .lock-icon{font-size:3rem;margin-bottom:12px}
+.lock-box h3{font-size:1.2rem;margin-bottom:8px}
+.lock-box p{font-size:.9rem;opacity:.8;line-height:1.6}
+.lock-box .countdown{font-size:1.5rem;font-weight:700;color:var(--accent);margin-top:12px}
 .rule-section{margin-bottom:18px}
 .rule-section h3{color:var(--accent);font-size:.95rem;margin-bottom:8px;font-weight:700}
 .rule-section p,.rule-section li{font-size:.88rem;line-height:1.7;color:var(--text)}
 .rule-section ul{padding-left:20px}
-@media(max-width:600px){header h1{font-size:1.4rem}nav button{padding:8px 12px;font-size:.8rem}.match-card{flex-direction:column;align-items:flex-start}.match-score{padding:6px 0}}
+@media(max-width:600px){header h1{font-size:1.4rem}nav button{padding:8px 12px;font-size:.8rem}.match-card{flex-direction:column;align-items:flex-start}.match-info{text-align:left}}
 </style>
 </head>
 <body>
@@ -78,26 +87,26 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 <button class="active" onclick="showTab('standings',this)">&#127942; Pool Standings</button>
 <button onclick="showTab('picks',this)">&#128203; Picks</button>
 <button onclick="showTab('scores',this)">&#9917; Today's Scores</button>
-<button onclick="showTab('fixtures',this)">&#128197; Tomorrow's Fixtures</button>
+<button onclick="showTab('fixtures',this)">&#128197; Next Match Day</button>
 <button onclick="showTab('groups',this)">&#128200; Group Stage</button>
 <button onclick="showTab('rules',this)">&#128209; Rules</button>
 </nav>
 </header>
 <main>
 <div id="tab-standings" class="tab-panel active">
-  <div class="card"><h2>&#127942; Pool Standings</h2><div id="standings-container"><div class="loading">Loading pool standings...</div></div></div>
+  <div class="card"><h2>&#127942; Pool Standings</h2><div id="standings-container"><div class="loading">Loading...</div></div></div>
 </div>
 <div id="tab-picks" class="tab-panel">
-  <div class="card"><h2>&#128203; All Picks (click to expand)</h2><div id="picks-container"><div class="loading">Loading picks...</div></div></div>
+  <div class="card"><h2>&#128203; All Picks</h2><div id="picks-container"><div class="loading">Loading...</div></div></div>
 </div>
 <div id="tab-scores" class="tab-panel">
-  <div class="card"><h2>&#9917; Today's Scores</h2><div id="scores-container"><div class="loading">Loading today's matches...</div></div></div>
+  <div class="card"><h2>&#9917; Today's Scores</h2><div id="scores-container"><div class="loading">Loading...</div></div></div>
 </div>
 <div id="tab-fixtures" class="tab-panel">
-  <div class="card"><h2>&#128197; Tomorrow's Fixtures</h2><div id="fixtures-container"><div class="loading">Loading fixtures...</div></div></div>
+  <div class="card"><h2>&#128197; Next Match Day</h2><div id="fixtures-container"><div class="loading">Loading...</div></div></div>
 </div>
 <div id="tab-groups" class="tab-panel">
-  <div class="card"><h2>&#128200; World Cup Group Stage Standings</h2><div id="groups-container"><div class="loading">Loading group standings...</div></div></div>
+  <div class="card"><h2>&#128200; World Cup Group Stage Standings</h2><div id="groups-container"><div class="loading">Loading...</div></div></div>
 </div>
 <div id="tab-rules" class="tab-panel">
   <div class="card"><h2>&#128209; Pool Rules</h2>
@@ -108,8 +117,8 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
       <li>+5 points for winning the group</li>
     </ul></div>
     <div class="rule-section"><h3>Knockout Round Bonuses (all multiplied by tier)</h3><ul>
-      <li>Round of 16: +5 points</li><li>Quarterfinals: +10 points</li>
-      <li>Semifinals: +15 points</li><li>Final: +20 points</li><li>Tournament Winner: +30 points</li>
+      <li>Round of 16: +5 pts &nbsp;|&nbsp; Quarterfinals: +10 pts &nbsp;|&nbsp; Semifinals: +15 pts</li>
+      <li>Final: +20 pts &nbsp;|&nbsp; Tournament Winner: +30 pts</li>
     </ul></div>
     <div class="rule-section"><h3>Tier Multipliers</h3><ul>
       <li>Tier 1 (1&times;): Spain, France, England</li>
@@ -125,7 +134,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
       <li>Tier 11 (10&times;): Curacao, Jordan, Haiti, Iraq</li>
     </ul></div>
     <div class="rule-section"><h3>Special Rules</h3><ul>
-      <li><strong>Double Points Team:</strong> One team already in your tier picks — doubles all multiplied points for that team. Must be a team you already selected.</li>
+      <li><strong>Double Points Team:</strong> One team already in your tier picks — doubles all multiplied points for that team throughout the tournament.</li>
       <li><strong>Golden Boot:</strong> Correct top scorer = 10 flat points (no multiplier).</li>
       <li><strong>Tiebreaker:</strong> Age in days of youngest goalscorer. Closest without going under wins.</li>
     </ul></div>
@@ -133,12 +142,39 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 </div>
 </main>
 <script>
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
 const API_KEY = '4b7b78f60fa543ada585c5815f2aac24';
 const SHEET_CSV = 'https://corsproxy.io/?' + encodeURIComponent('https://docs.google.com/spreadsheets/d/e/2PACX-1vSZOF_or5NjbIHLnQrCcSFaNlsbBvCpfizhNcPzictpw0ikAigYKDJhSoFd4a697n3oRoomn6o6jtEv/pub?gid=2084502933&single=true&output=csv');
 const API_BASE = 'https://api.football-data.org/v4';
 const COMP = 'WC';
 const PROXY = 'https://corsproxy.io/?';
 
+// Tournament start: June 11 2026 at 3pm ET = 19:00 UTC
+const TOURNAMENT_START = new Date('2026-06-11T19:00:00Z');
+
+// ─── VENUE LOOKUP (Group stage matchday 1 host cities) ────────────────────────
+// Based on 2026 World Cup host cities. Keyed by team IDs or match IDs where possible.
+// We'll map group → city for simplicity since host cities are assigned per group.
+const GROUP_CITY = {
+  'GROUP_A': 'Los Angeles, CA',
+  'GROUP_B': 'Toronto, Canada',
+  'GROUP_C': 'San Francisco, CA',
+  'GROUP_D': 'Dallas, TX',
+  'GROUP_E': 'New York / New Jersey',
+  'GROUP_F': 'Seattle, WA',
+  'GROUP_G': 'Houston, TX',
+  'GROUP_H': 'Miami, FL',
+  'GROUP_I': 'Philadelphia, PA',
+  'GROUP_J': 'Kansas City, MO',
+  'GROUP_K': 'Boston, MA',
+  'GROUP_L': 'Atlanta, GA',
+  'ROUND_OF_16': 'TBD',
+  'QUARTER_FINALS': 'TBD',
+  'SEMI_FINALS': 'TBD',
+  'FINAL': 'New York / New Jersey'
+};
+
+// ─── TIERS ───────────────────────────────────────────────────────────────────
 const TIERS = {
   'Spain':1,'France':1,'England':1,
   'Brazil':1.5,'Portugal':1.5,'Argentina':1.5,'Germany':1.5,
@@ -158,7 +194,7 @@ const API_MAP = {
   'Turkey':'Turkiye','Türkiye':'Turkiye',
   'Korea Republic':'South Korea',
   'USA':'United States','United States of America':'United States',
-  'Bosnia and Herzegovina':'Bosnia & Herzegovina',
+  'Bosnia and Herzegovina':'Bosnia & Herzegovina','Bosnia-Herzegovina':'Bosnia & Herzegovina',
   'Czech Republic':'Czechia',
   'Democratic Republic of Congo':'DR Congo','Congo DR':'DR Congo',
   'Cabo Verde':'Cape Verde',
@@ -168,6 +204,7 @@ function toPoolName(n){ return API_MAP[n] || n; }
 
 let RESULTS = {};
 
+// ─── TAB SWITCHING ───────────────────────────────────────────────────────────
 function showTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -175,6 +212,47 @@ function showTab(id, btn) {
   btn.classList.add('active');
 }
 
+// ─── UTILITIES ───────────────────────────────────────────────────────────────
+function esc(s){ return s?(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''; }
+
+function toET(utcStr) {
+  if (!utcStr) return '';
+  const d = new Date(utcStr);
+  return d.toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  }) + ' ET';
+}
+
+function toETTimeOnly(utcStr) {
+  if (!utcStr) return '';
+  const d = new Date(utcStr);
+  return d.toLocaleTimeString('en-US', {
+    timeZone: 'America/New_York',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  }) + ' ET';
+}
+
+function toETDateOnly(utcStr) {
+  if (!utcStr) return '';
+  const d = new Date(utcStr);
+  return d.toLocaleDateString('en-US', {
+    timeZone: 'America/New_York',
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+}
+
+// ─── CSV PARSING ─────────────────────────────────────────────────────────────
 function parseCSV(text) {
   const rows = [];
   const lines = text.replace(/\r/g,'').split('\n');
@@ -204,14 +282,24 @@ function buildParticipant(row) {
   };
 }
 
+// ─── SCORING ─────────────────────────────────────────────────────────────────
 function calcTeamScore(team, isDouble) {
   const mult = TIERS[team] || 1;
   const r = RESULTS[team];
   if (!r) return { pts:0, multiplied:0 };
-  let pts = r.matchPts||0;
-  if (r.groupFinish===1) pts+=5; else if (r.groupFinish===2) pts+=3; else if (r.groupFinish===3) pts+=1;
-  if (r.r16) pts+=5; if (r.qf) pts+=10; if (r.sf) pts+=15; if (r.final) pts+=20; if (r.winner) pts+=30;
-  return { pts, multiplied: pts * mult * (isDouble?2:1) };
+  let pts = r.matchPts || 0;
+  // Only award group finish bonuses if games have actually been played
+  if (r.gamesPlayed > 0) {
+    if (r.groupFinish === 1) pts += 5;
+    else if (r.groupFinish === 2) pts += 3;
+    else if (r.groupFinish === 3) pts += 1;
+  }
+  if (r.r16) pts += 5;
+  if (r.qf) pts += 10;
+  if (r.sf) pts += 15;
+  if (r.final) pts += 20;
+  if (r.winner) pts += 30;
+  return { pts, multiplied: pts * mult * (isDouble ? 2 : 1) };
 }
 
 function calcScore(p) {
@@ -220,120 +308,269 @@ function calcScore(p) {
   const breakdown = [];
   picks.forEach(team => {
     if (!team) return;
-    const isDbl = p.double && team.toLowerCase().trim()===p.double.toLowerCase().trim();
+    const isDbl = p.double && team.toLowerCase().trim() === p.double.toLowerCase().trim();
     const s = calcTeamScore(team, isDbl);
     total += s.multiplied;
-    breakdown.push({team, pts: s.multiplied, isDbl});
+    breakdown.push({ team, pts: s.multiplied, isDbl });
   });
   const gbPts = (p.goldenBoot && RESULTS._goldenBoot &&
-    p.goldenBoot.toLowerCase().trim()===RESULTS._goldenBoot.toLowerCase().trim()) ? 10 : 0;
+    p.goldenBoot.toLowerCase().trim() === RESULTS._goldenBoot.toLowerCase().trim()) ? 10 : 0;
   total += gbPts;
-  return {total, breakdown, gbPts};
+  return { total, breakdown, gbPts };
 }
 
-function esc(s){ return s?(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''; }
-
+// ─── RENDER STANDINGS ─────────────────────────────────────────────────────────
 function renderStandings(ps) {
   if (!ps.length) {
     document.getElementById('standings-container').innerHTML = '<div class="info-box">No submissions yet. Share your pool form with friends to get started!</div>';
     return;
   }
-  const scored = ps.map(p=>{const s=calcScore(p);return{...p,...s};}).sort((a,b)=>b.total-a.total);
+  const scored = ps.map(p => { const s = calcScore(p); return {...p, ...s}; }).sort((a,b) => b.total - a.total);
   let html = '<table class="standings-table"><thead><tr><th>#</th><th>Name</th><th>Total Pts</th><th>GB</th><th>Top Team</th></tr></thead><tbody>';
-  scored.forEach((p,i) => {
-    const rc = i<3?'rank-'+(i+1):'';
-    const bd = [...p.breakdown].sort((a,b)=>b.pts-a.pts);
+  scored.forEach((p, i) => {
+    const rc = i < 3 ? 'rank-' + (i+1) : '';
+    const bd = [...p.breakdown].sort((a,b) => b.pts - a.pts);
     const top = bd[0];
-    const detail = bd.filter(b=>b.pts>0).map(b=>(b.isDbl?'2x ':'')+b.team+' '+b.pts.toFixed(1)).join(' | ');
-    html += `<tr><td><span class="rank-badge ${rc}">${i+1}</span></td>
-      <td><strong>${esc(p.name)}</strong><br><span style="font-size:.75rem;color:var(--muted)">${esc(detail)}</span></td>
+    const detail = bd.filter(b => b.pts > 0).map(b => (b.isDbl ? '2x ' : '') + b.team + ' ' + b.pts.toFixed(1)).join(' | ');
+    html += `<tr>
+      <td><span class="rank-badge ${rc}">${i+1}</span></td>
+      <td><strong>${esc(p.name)}</strong>${detail ? '<br><span style="font-size:.75rem;color:var(--muted)">'+esc(detail)+'</span>' : ''}</td>
       <td><span class="score-badge">${p.total.toFixed(1)}</span></td>
-      <td>${p.gbPts>0?'&#9989;':'-'}</td>
-      <td>${top?esc(top.team)+' ('+top.pts.toFixed(1)+')':'-'}</td></tr>`;
+      <td>${p.gbPts > 0 ? '&#9989;' : '-'}</td>
+      <td>${top && top.pts > 0 ? esc(top.team) + ' (' + top.pts.toFixed(1) + ')' : '-'}</td>
+    </tr>`;
   });
   html += '</tbody></table>';
   document.getElementById('standings-container').innerHTML = html;
 }
 
+// ─── RENDER PICKS (locked before tournament) ──────────────────────────────────
 function renderPicks(ps) {
-  if (!ps.length) { document.getElementById('picks-container').innerHTML = '<div class="info-box">No submissions yet.</div>'; return; }
+  const now = new Date();
+  const locked = now < TOURNAMENT_START;
+
+  if (locked) {
+    const diff = TOURNAMENT_START - now;
+    const days = Math.floor(diff / 86400000);
+    const hrs = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('picks-container').innerHTML = `
+      <div class="lock-box">
+        <div class="lock-icon">&#128274;</div>
+        <h3>Picks are hidden until the tournament begins on June 11</h3>
+        <p>All submissions are locked in and will be revealed when the first match kicks off.</p>
+        <div class="countdown">&#9203; ${days}d ${hrs}h ${mins}m until kickoff</div>
+      </div>`;
+    return;
+  }
+
+  if (!ps.length) {
+    document.getElementById('picks-container').innerHTML = '<div class="info-box">No submissions yet.</div>';
+    return;
+  }
+
   const tLabels = ['Tier 1 (1x)','Tier 2 (1.5x)','Tier 3 (2x)','Tier 4 (2.5x)','Tier 5 (3x)','Tier 6 (4x)','Tier 7 (5x)','Tier 8 (5.5x)','Tier 9 (6x)','Tier 10 (8x)','Tier 11 (10x)'];
   const tKeys = ['tier1','tier2','tier3','tier4','tier5','tier6','tier7','tier8','tier9','tier10','tier11'];
   let html = '';
-  ps.forEach((p,idx) => {
-    html += `<div class="pick-card"><h3 onclick="togglePick(${idx})"><span>${esc(p.name)}</span><span>&#9660;</span></h3>
+  ps.forEach((p, idx) => {
+    html += `<div class="pick-card">
+      <h3 onclick="togglePick(${idx})"><span>${esc(p.name)}</span><span>&#9660;</span></h3>
       <div id="pick-${idx}" class="pick-details">
-        ${tKeys.map((k,ii)=>p[k]?`<div class="pick-item"><strong>${tLabels[ii]}</strong>${esc(p[k])}</div>`:'').join('')}
+        ${tKeys.map((k,ii) => p[k] ? `<div class="pick-item"><strong>${tLabels[ii]}</strong>${esc(p[k])}</div>` : '').join('')}
         <div class="pick-item"><strong>Double Points</strong>${esc(p.double||'—')}</div>
         <div class="pick-item"><strong>Golden Boot</strong>${esc(p.goldenBoot||'—')}</div>
         <div class="pick-item"><strong>Tiebreaker</strong>${esc(p.tiebreaker||'—')}</div>
-      </div></div>`;
+      </div>
+    </div>`;
   });
   document.getElementById('picks-container').innerHTML = html;
 }
 
-function togglePick(idx) { const el=document.getElementById('pick-'+idx); if(el) el.classList.toggle('open'); }
+function togglePick(idx) { const el = document.getElementById('pick-' + idx); if (el) el.classList.toggle('open'); }
 
-function formatTime(u){ if(!u) return ''; const d=new Date(u); return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); }
-
-function renderMatches(matches, cid, empty) {
-  if (!matches||!matches.length){ document.getElementById(cid).innerHTML=`<div class="info-box">${empty}</div>`; return; }
+// ─── RENDER TODAY'S SCORES ────────────────────────────────────────────────────
+function renderTodayScores(matches) {
+  if (!matches || !matches.length) {
+    document.getElementById('scores-container').innerHTML = '<div class="info-box">No World Cup matches scheduled today.</div>';
+    return;
+  }
   let html = '';
   matches.forEach(m => {
-    const home=m.homeTeam?.name||'?', away=m.awayTeam?.name||'?';
-    const sc=m.score?.fullTime;
-    const scoreStr = sc&&sc.home!==null?`${sc.home} - ${sc.away}`:'vs';
-    const st=m.status;
-    const cls=st==='FINISHED'?'status-ft':st==='IN_PLAY'||st==='PAUSED'?'status-live':'status-sched';
-    const lbl=st==='FINISHED'?'FT':st==='IN_PLAY'?'LIVE':st==='PAUSED'?'HT':formatTime(m.utcDate);
-    html+=`<div class="match-card">
-      <div class="match-teams"><div class="home">${esc(home)}</div><div class="away">${esc(away)}</div>
-      <div class="match-meta">${esc(m.group||m.stage||'')}</div></div>
+    const home = m.homeTeam?.name || '?', away = m.awayTeam?.name || '?';
+    const sc = m.score?.fullTime;
+    const scoreStr = sc && sc.home !== null ? `${sc.home} - ${sc.away}` : 'vs';
+    const st = m.status;
+    const cls = st === 'FINISHED' ? 'status-ft' : st === 'IN_PLAY' || st === 'PAUSED' ? 'status-live' : 'status-sched';
+    const lbl = st === 'FINISHED' ? 'FT' : st === 'IN_PLAY' ? 'LIVE' : st === 'PAUSED' ? 'HT' : toETTimeOnly(m.utcDate);
+    const venue = GROUP_CITY[m.group] || GROUP_CITY[m.stage] || '';
+    html += `<div class="match-card">
+      <div class="match-teams">
+        <div class="home">${esc(home)}</div>
+        <div class="away">${esc(away)}</div>
+        <div class="match-meta">${esc(m.group ? m.group.replace('GROUP_','Group ') : m.stage||'')}</div>
+      </div>
       <div class="match-score">${scoreStr}</div>
-      <span class="match-status ${cls}">${lbl}</span></div>`;
+      <div class="match-info">
+        <span class="match-status ${cls}">${lbl}</span>
+        ${venue ? '<div class="venue">' + esc(venue) + '</div>' : ''}
+      </div>
+    </div>`;
   });
-  document.getElementById(cid).innerHTML = html;
+  document.getElementById('scores-container').innerHTML = html;
 }
 
+// ─── RENDER NEXT MATCH DAY ────────────────────────────────────────────────────
+function renderNextMatchDay(allScheduled) {
+  if (!allScheduled || !allScheduled.length) {
+    document.getElementById('fixtures-container').innerHTML = '<div class="info-box">No upcoming World Cup matches found.</div>';
+    return;
+  }
+
+  // Find the earliest date that has scheduled/timed matches (in ET)
+  const now = new Date();
+  const upcoming = allScheduled
+    .filter(m => new Date(m.utcDate) > now)
+    .sort((a,b) => new Date(a.utcDate) - new Date(b.utcDate));
+
+  if (!upcoming.length) {
+    document.getElementById('fixtures-container').innerHTML = '<div class="info-box">No upcoming matches found.</div>';
+    return;
+  }
+
+  // Get the date of the first upcoming match (in ET)
+  const firstDate = new Date(upcoming[0].utcDate).toLocaleDateString('en-US', { timeZone: 'America/New_York', year:'numeric', month:'2-digit', day:'2-digit' });
+
+  // Get all matches on that same ET date
+  const dayMatches = upcoming.filter(m => {
+    const d = new Date(m.utcDate).toLocaleDateString('en-US', { timeZone: 'America/New_York', year:'numeric', month:'2-digit', day:'2-digit' });
+    return d === firstDate;
+  });
+
+  const dateLabel = toETDateOnly(upcoming[0].utcDate);
+  let html = `<div class="matchday-header">&#128197; ${esc(dateLabel)}</div>`;
+
+  dayMatches.forEach(m => {
+    const home = m.homeTeam?.name || '?', away = m.awayTeam?.name || '?';
+    const venue = GROUP_CITY[m.group] || GROUP_CITY[m.stage] || 'TBD';
+    const kickoff = toETTimeOnly(m.utcDate);
+    const groupLabel = m.group ? m.group.replace('GROUP_','Group ') : (m.stage||'').replace(/_/g,' ');
+    html += `<div class="match-card">
+      <div class="match-teams">
+        <div class="home">${esc(home)}</div>
+        <div class="away">${esc(away)}</div>
+        <div class="match-meta">${esc(groupLabel)}</div>
+      </div>
+      <div class="match-score">vs</div>
+      <div class="match-info">
+        <div class="kickoff">${esc(kickoff)}</div>
+        <div class="venue">&#128205; ${esc(venue)}</div>
+        <span class="match-status status-sched">Scheduled</span>
+      </div>
+    </div>`;
+  });
+
+  document.getElementById('fixtures-container').innerHTML = html;
+}
+
+// ─── RENDER GROUP STANDINGS ───────────────────────────────────────────────────
 function renderGroups(standings) {
-  if (!standings||!standings.length){ document.getElementById('groups-container').innerHTML='<div class="info-box">Group standings will appear once the tournament begins.</div>'; return; }
-  const groups={};
-  standings.forEach(e=>{ const g=e.group||'?'; if(!groups[g]) groups[g]=[]; groups[g].push(e); });
-  let html='<div class="groups-grid">';
+  if (!standings || !standings.length) {
+    document.getElementById('groups-container').innerHTML = '<div class="info-box">Group standings will update once the tournament begins.</div>';
+    return;
+  }
+  const groups = {};
+  standings.forEach(e => { const g = e.group||'?'; if (!groups[g]) groups[g] = []; groups[g].push(e); });
+  let html = '<div class="groups-grid">';
   Object.keys(groups).sort().forEach(g => {
-    const teams=groups[g].sort((a,b)=>(b.points||0)-(a.points||0)||(b.goalDifference||0)-(a.goalDifference||0));
-    html+=`<div class="group-section"><h3>Group ${g.replace('GROUP_','')}</h3>
+    const teams = groups[g].sort((a,b) => (b.points||0)-(a.points||0) || (b.goalDifference||0)-(a.goalDifference||0));
+    html += `<div class="group-section"><h3>Group ${g.replace('GROUP_','')}</h3>
       <table class="group-table"><thead><tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead><tbody>`;
-    teams.forEach((t,i)=>{ const adv=i<2?'style="background:#e8f5e9"':'';
-      html+=`<tr ${adv}><td>${esc(t.team?.name||'?')}</td><td>${t.playedGames||0}</td><td>${t.won||0}</td><td>${t.draw||0}</td><td>${t.lost||0}</td><td>${t.goalDifference||0}</td><td><strong>${t.points||0}</strong></td></tr>`;
+    teams.forEach((t,i) => {
+      const adv = i < 2 ? 'style="background:#e8f5e9"' : '';
+      html += `<tr ${adv}><td>${esc(t.team?.name||'?')}</td><td>${t.playedGames||0}</td><td>${t.won||0}</td><td>${t.draw||0}</td><td>${t.lost||0}</td><td>${t.goalDifference||0}</td><td><strong>${t.points||0}</strong></td></tr>`;
     });
-    html+='</tbody></table></div>';
+    html += '</tbody></table></div>';
   });
-  html+='</div>';
-  document.getElementById('groups-container').innerHTML=html;
+  html += '</div>';
+  document.getElementById('groups-container').innerHTML = html;
 }
 
+// ─── API FETCHER ──────────────────────────────────────────────────────────────
 async function apiGet(path) {
   try {
-    const r = await fetch(PROXY+encodeURIComponent(API_BASE+path),{headers:{'X-Auth-Token':API_KEY}});
+    const r = await fetch(PROXY + encodeURIComponent(API_BASE + path), { headers: {'X-Auth-Token': API_KEY} });
     if (!r.ok) return null;
     return await r.json();
-  } catch(e){ return null; }
+  } catch(e) { return null; }
 }
 
+// ─── LOAD TOURNAMENT RESULTS ──────────────────────────────────────────────────
+async function loadTournamentResults() {
+  const data = await apiGet('/competitions/' + COMP + '/matches?status=FINISHED');
+  if (!data || !data.matches) return;
+  RESULTS = {};
+  data.matches.forEach(m => {
+    const home = toPoolName(m.homeTeam?.name||''), away = toPoolName(m.awayTeam?.name||'');
+    const hs = m.score?.fullTime?.home, as_ = m.score?.fullTime?.away;
+    if (hs === null || as_ === null || hs === undefined) return;
+    if (!RESULTS[home]) RESULTS[home] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
+    if (!RESULTS[away]) RESULTS[away] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
+    const stage = m.stage || '';
+    if (stage === 'GROUP_STAGE') {
+      RESULTS[home].gamesPlayed++;
+      RESULTS[away].gamesPlayed++;
+      if (hs > as_) RESULTS[home].matchPts += 3;
+      else if (hs === as_) { RESULTS[home].matchPts += 1; RESULTS[away].matchPts += 1; }
+      else RESULTS[away].matchPts += 3;
+    }
+    const sm = {'ROUND_OF_16':'r16','QUARTER_FINALS':'qf','SEMI_FINALS':'sf','FINAL':'final','THIRD_PLACE':'sf'};
+    const key = sm[stage];
+    if (key) {
+      RESULTS[home][key] = true; RESULTS[away][key] = true;
+      let win = null;
+      if (hs > as_) win = home; else if (as_ > hs) win = away;
+      else { const p = m.score?.penalties; if (p) win = p.home > p.away ? home : away; }
+      if (win) {
+        if (stage === 'FINAL') RESULTS[win].winner = true;
+        else if (stage === 'ROUND_OF_16') RESULTS[win].qf = true;
+        else if (stage === 'QUARTER_FINALS') RESULTS[win].sf = true;
+        else if (stage === 'SEMI_FINALS') RESULTS[win].final = true;
+      }
+    }
+  });
+
+  // Group finish — only assign if games have been played in that group
+  const gs = await apiGet('/competitions/' + COMP + '/standings');
+  if (gs && gs.standings) {
+    gs.standings.forEach(group => {
+      if (group.type !== 'TOTAL') return;
+      // Check if any team in this group has played a game
+      const gamesPlayedInGroup = group.table.reduce((sum, e) => sum + (e.playedGames||0), 0);
+      if (gamesPlayedInGroup === 0) return; // No games yet, skip group finish assignment
+      group.table.forEach((e, i) => {
+        const t = toPoolName(e.team?.name||'');
+        if (!RESULTS[t]) RESULTS[t] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
+        RESULTS[t].groupFinish = i + 1;
+        RESULTS[t].gamesPlayed = e.playedGames || 0;
+      });
+    });
+  }
+}
+
+// ─── LOAD POOL DATA ───────────────────────────────────────────────────────────
 async function loadPoolData() {
   try {
     const r = await fetch(SHEET_CSV);
     const text = await r.text();
     const firstLine = text.split('\n')[0]||'';
     if (!firstLine.includes(',') || firstLine.toLowerCase().includes('<html') || firstLine.toLowerCase().includes('<!doctype')) {
-      const msg = '<div class="warn-box"><strong>&#9888; Google Sheet not yet published as CSV.</strong><br><br>To fix: Open your Google Sheet &rarr; File &rarr; Share &rarr; Publish to web &rarr; select Form Responses 1 &rarr; CSV &rarr; Publish.</div>';
+      const msg = '<div class="warn-box"><strong>&#9888; Google Sheet not yet published as CSV.</strong><br>File &rarr; Share &rarr; Publish to web &rarr; Form Responses 1 &rarr; CSV &rarr; Publish.</div>';
       document.getElementById('standings-container').innerHTML = msg;
       document.getElementById('picks-container').innerHTML = msg;
       return [];
     }
     const rows = parseCSV(text);
-    const ps = rows.map(buildParticipant).filter(p=>p.name && p.name!=='Submission Name' && !p.name.includes('{'));
+    const ps = rows.map(buildParticipant).filter(p => p.name && p.name !== 'Submission Name' && !p.name.includes('{'));
     renderStandings(ps);
     renderPicks(ps);
     return ps;
@@ -345,79 +582,49 @@ async function loadPoolData() {
   }
 }
 
-async function loadTournamentResults() {
-  const data = await apiGet('/competitions/'+COMP+'/matches?status=FINISHED');
-  if (!data||!data.matches) return;
-  RESULTS = {};
-  data.matches.forEach(m => {
-    const home=toPoolName(m.homeTeam?.name||''), away=toPoolName(m.awayTeam?.name||'');
-    const hs=m.score?.fullTime?.home, as_=m.score?.fullTime?.away;
-    if (hs===null||as_===null||hs===undefined) return;
-    if (!RESULTS[home]) RESULTS[home]={matchPts:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
-    if (!RESULTS[away]) RESULTS[away]={matchPts:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
-    const stage=m.stage||'';
-    if (stage==='GROUP_STAGE') {
-      if (hs>as_) RESULTS[home].matchPts+=3;
-      else if (hs===as_) { RESULTS[home].matchPts+=1; RESULTS[away].matchPts+=1; }
-      else RESULTS[away].matchPts+=3;
-    }
-    const sm={'ROUND_OF_16':'r16','QUARTER_FINALS':'qf','SEMI_FINALS':'sf','FINAL':'final','THIRD_PLACE':'sf'};
-    const key=sm[stage];
-    if (key) {
-      RESULTS[home][key]=true; RESULTS[away][key]=true;
-      let win=null;
-      if (hs>as_) win=home; else if (as_>hs) win=away;
-      else { const p=m.score?.penalties; if(p) win=p.home>p.away?home:away; }
-      if (win) {
-        if (stage==='FINAL') RESULTS[win].winner=true;
-        else if (stage==='ROUND_OF_16') RESULTS[win].qf=true;
-        else if (stage==='QUARTER_FINALS') RESULTS[win].sf=true;
-        else if (stage==='SEMI_FINALS') RESULTS[win].final=true;
-      }
-    }
-  });
-  const gs=await apiGet('/competitions/'+COMP+'/standings');
-  if (gs&&gs.standings) {
-    gs.standings.forEach(g=>{
-      if (g.type!=='TOTAL') return;
-      g.table.forEach((e,i)=>{ const t=toPoolName(e.team?.name||'');
-        if (!RESULTS[t]) RESULTS[t]={matchPts:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
-        RESULTS[t].groupFinish=i+1;
-      });
-    });
+// ─── LOAD TODAY'S SCORES ──────────────────────────────────────────────────────
+async function loadTodayScores() {
+  const today = new Date();
+  const fmt = d => d.toISOString().split('T')[0];
+  const data = await apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(today)}&dateTo=${fmt(today)}`);
+  if (!data) { document.getElementById('scores-container').innerHTML = '<div class="warn-box">Could not load today\'s scores.</div>'; return; }
+  renderTodayScores(data.matches);
+}
+
+// ─── LOAD NEXT MATCH DAY ──────────────────────────────────────────────────────
+async function loadNextMatchDay() {
+  const data = await apiGet(`/competitions/${COMP}/matches?status=TIMED`);
+  if (!data) {
+    // fallback: try SCHEDULED status
+    const data2 = await apiGet(`/competitions/${COMP}/matches?status=SCHEDULED`);
+    if (!data2) { document.getElementById('fixtures-container').innerHTML = '<div class="warn-box">Could not load upcoming fixtures.</div>'; return; }
+    renderNextMatchDay(data2.matches);
+    return;
   }
+  renderNextMatchDay(data.matches);
 }
 
-async function loadDayMatches() {
-  const today=new Date(), tom=new Date(today);
-  tom.setDate(tom.getDate()+1);
-  const fmt=d=>d.toISOString().split('T')[0];
-  const td=await apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(today)}&dateTo=${fmt(today)}`);
-  if (!td) { document.getElementById('scores-container').innerHTML='<div class="warn-box">Could not load today\'s scores from API.</div>'; }
-  else renderMatches(td.matches,'scores-container','No World Cup matches scheduled today.');
-  const tm=await apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(tom)}&dateTo=${fmt(tom)}`);
-  if (!tm) { document.getElementById('fixtures-container').innerHTML='<div class="warn-box">Could not load tomorrow\'s fixtures from API.</div>'; }
-  else renderMatches(tm.matches,'fixtures-container','No World Cup matches scheduled tomorrow.');
-}
-
+// ─── LOAD GROUP STANDINGS ─────────────────────────────────────────────────────
 async function loadGroupStandings() {
-  const data=await apiGet('/competitions/'+COMP+'/standings');
-  if (!data) { document.getElementById('groups-container').innerHTML='<div class="warn-box">Could not load group standings from API.</div>'; return; }
-  const all=[];
-  if (data.standings) data.standings.forEach(g=>{ if(g.type!=='TOTAL') return; g.table.forEach(e=>all.push({...e,group:g.group})); });
+  const data = await apiGet('/competitions/' + COMP + '/standings');
+  if (!data) { document.getElementById('groups-container').innerHTML = '<div class="warn-box">Could not load group standings.</div>'; return; }
+  const all = [];
+  if (data.standings) data.standings.forEach(g => { if (g.type !== 'TOTAL') return; g.table.forEach(e => all.push({...e, group: g.group})); });
   renderGroups(all);
 }
 
+// ─── MAIN ─────────────────────────────────────────────────────────────────────
 async function loadAll() {
   await loadTournamentResults();
   await loadPoolData();
-  await loadDayMatches();
+  await loadTodayScores();
+  await loadNextMatchDay();
   await loadGroupStandings();
 }
 
 async function refreshAll() {
-  ['standings-container','scores-container','fixtures-container','groups-container'].forEach(id=>{
-    document.getElementById(id).innerHTML='<div class="loading">Refreshing...</div>';
+  ['standings-container','scores-container','fixtures-container','groups-container','picks-container'].forEach(id => {
+    document.getElementById(id).innerHTML = '<div class="loading">Refreshing...</div>';
   });
   await loadAll();
 }
