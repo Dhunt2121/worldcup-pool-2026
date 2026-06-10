@@ -426,7 +426,6 @@ function renderNextMatchDay(allScheduled) {
     return;
   }
 
-  // Find the earliest date that has scheduled/timed matches (in ET)
   const now = new Date();
   const upcoming = allScheduled
     .filter(m => new Date(m.utcDate) > now)
@@ -437,24 +436,37 @@ function renderNextMatchDay(allScheduled) {
     return;
   }
 
-  // Get the date of the first upcoming match (in ET)
-  const firstDate = new Date(upcoming[0].utcDate).toLocaleDateString('en-US', { timeZone: 'America/New_York', year:'numeric', month:'2-digit', day:'2-digit' });
+  // Determine the first two distinct ET dates that have upcoming matches
+  const etOptions = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' };
+  const datesToShow = new Set();
+  for (const m of upcoming) {
+    const d = new Date(m.utcDate).toLocaleDateString('en-US', etOptions);
+    datesToShow.add(d);
+    if (datesToShow.size === 2) break;
+  }
 
-  // Get all matches on that same ET date
-  const dayMatches = upcoming.filter(m => {
-    const d = new Date(m.utcDate).toLocaleDateString('en-US', { timeZone: 'America/New_York', year:'numeric', month:'2-digit', day:'2-digit' });
-    return d === firstDate;
+  // Group matches by ET date for the two dates to show
+  const matchesByDate = {};
+  upcoming.forEach(m => {
+    const d = new Date(m.utcDate).toLocaleDateString('en-US', etOptions);
+    if (!datesToShow.has(d)) return;
+    if (!matchesByDate[d]) matchesByDate[d] = [];
+    matchesByDate[d].push(m);
   });
 
-  const dateLabel = toETDateOnly(upcoming[0].utcDate);
-  let html = `<div class="matchday-header">&#128197; ${esc(dateLabel)}</div>`;
-
-  dayMatches.forEach(m => {
-    const home = m.homeTeam?.name || '?', away = m.awayTeam?.name || '?';
-    const venue = GROUP_CITY[m.group] || GROUP_CITY[m.stage] || 'TBD';
-    const kickoff = toETTimeOnly(m.utcDate);
-    const groupLabel = m.group ? m.group.replace('GROUP_','Group ') : (m.stage||'').replace(/_/g,' ');
-    html += `<div class="match-card">
+  let html = '';
+  const sortedDates = Array.from(datesToShow).sort();
+  sortedDates.forEach(dateKey => {
+    const dayMatches = matchesByDate[dateKey] || [];
+    if (!dayMatches.length) return;
+    const dateLabel = toETDateOnly(dayMatches[0].utcDate);
+    html += `<div class="matchday-header">&#128197; ${esc(dateLabel)}</div>`;
+    dayMatches.forEach(m => {
+      const home = m.homeTeam?.name || '?', away = m.awayTeam?.name || '?';
+      const venue = GROUP_CITY[m.group] || GROUP_CITY[m.stage] || 'TBD';
+      const kickoff = toETTimeOnly(m.utcDate);
+      const groupLabel = m.group ? m.group.replace('GROUP_','Group ') : (m.stage||'').replace(/_/g,' ');
+      html += `<div class="match-card">
       <div class="match-teams">
         <div class="home">${esc(home)}</div>
         <div class="away">${esc(away)}</div>
@@ -467,11 +479,11 @@ function renderNextMatchDay(allScheduled) {
         <span class="match-status status-sched">Scheduled</span>
       </div>
     </div>`;
+    });
   });
 
   document.getElementById('fixtures-container').innerHTML = html;
 }
-
 // ─── RENDER GROUP STANDINGS ───────────────────────────────────────────────────
 function renderGroups(standings) {
   if (!standings || !standings.length) {
@@ -594,8 +606,8 @@ async function loadTodayScores() {
 // ─── LOAD NEXT MATCH DAY ──────────────────────────────────────────────────────
 async function loadNextMatchDay() {
   const data = await apiGet(`/competitions/${COMP}/matches?status=TIMED`);
-  if (!data) {
-    // fallback: try SCHEDULED status
+  if (!data || !data.matches || !data.matches.length) {
+    // TIMED returned empty or failed — fall back to SCHEDULED
     const data2 = await apiGet(`/competitions/${COMP}/matches?status=SCHEDULED`);
     if (!data2) { document.getElementById('fixtures-container').innerHTML = '<div class="warn-box">Could not load upcoming fixtures.</div>'; return; }
     renderNextMatchDay(data2.matches);
@@ -603,7 +615,6 @@ async function loadNextMatchDay() {
   }
   renderNextMatchDay(data.matches);
 }
-
 // ─── LOAD GROUP STANDINGS ─────────────────────────────────────────────────────
 async function loadGroupStandings() {
   const data = await apiGet('/competitions/' + COMP + '/standings');
