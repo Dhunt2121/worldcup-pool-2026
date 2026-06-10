@@ -60,8 +60,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 .loading{text-align:center;padding:40px;color:var(--muted);font-size:.95rem}
 .error-msg{background:#fff3f3;border:1px solid #fca5a5;border-radius:8px;padding:14px;color:#c0392b;font-size:.88rem;margin-bottom:16px}
 .info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px;font-size:.87rem;line-height:1.6}
-.tier-label{display:inline-block;padding:2px 7px;border-radius:6px;font-size:.75rem;font-weight:700;background:var(--primary);color:#fff;margin-right:4px}
-.pts-breakdown{font-size:.78rem;color:var(--muted)}
+.warn-box{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:14px;font-size:.87rem;line-height:1.6}
 .rule-section{margin-bottom:18px}
 .rule-section h3{color:var(--accent);font-size:.95rem;margin-bottom:8px;font-weight:700}
 .rule-section p,.rule-section li{font-size:.88rem;line-height:1.7;color:var(--text)}
@@ -78,112 +77,69 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 <nav id="nav">
 <button class="active" onclick="showTab('standings',this)">&#127942; Pool Standings</button>
 <button onclick="showTab('picks',this)">&#128203; Picks</button>
-<button onclick="showTab('scores',this)">&#127942; Today's Scores</button>
+<button onclick="showTab('scores',this)">&#9917; Today's Scores</button>
 <button onclick="showTab('fixtures',this)">&#128197; Tomorrow's Fixtures</button>
 <button onclick="showTab('groups',this)">&#128200; Group Stage</button>
 <button onclick="showTab('rules',this)">&#128209; Rules</button>
 </nav>
 </header>
 <main>
-<!-- POOL STANDINGS TAB -->
 <div id="tab-standings" class="tab-panel active">
-  <div class="card">
-    <h2>&#127942; Pool Standings</h2>
-    <div id="standings-container"><div class="loading">Loading pool standings...</div></div>
-  </div>
+  <div class="card"><h2>&#127942; Pool Standings</h2><div id="standings-container"><div class="loading">Loading pool standings...</div></div></div>
 </div>
-
-<!-- PICKS TAB -->
 <div id="tab-picks" class="tab-panel">
-  <div class="card">
-    <h2>&#128203; All Picks (click to expand)</h2>
-    <div id="picks-container"><div class="loading">Loading picks...</div></div>
-  </div>
+  <div class="card"><h2>&#128203; All Picks (click to expand)</h2><div id="picks-container"><div class="loading">Loading picks...</div></div></div>
 </div>
-
-<!-- TODAY'S SCORES TAB -->
 <div id="tab-scores" class="tab-panel">
-  <div class="card">
-    <h2>&#9917; Today's Scores</h2>
-    <div id="scores-container"><div class="loading">Loading today's matches...</div></div>
-  </div>
+  <div class="card"><h2>&#9917; Today's Scores</h2><div id="scores-container"><div class="loading">Loading today's matches...</div></div></div>
 </div>
-
-<!-- TOMORROW'S FIXTURES TAB -->
 <div id="tab-fixtures" class="tab-panel">
-  <div class="card">
-    <h2>&#128197; Tomorrow's Fixtures</h2>
-    <div id="fixtures-container"><div class="loading">Loading fixtures...</div></div>
-  </div>
+  <div class="card"><h2>&#128197; Tomorrow's Fixtures</h2><div id="fixtures-container"><div class="loading">Loading fixtures...</div></div></div>
 </div>
-
-<!-- GROUP STAGE TAB -->
 <div id="tab-groups" class="tab-panel">
-  <div class="card">
-    <h2>&#128200; World Cup Group Stage Standings</h2>
-    <div id="groups-container"><div class="loading">Loading group standings...</div></div>
-  </div>
+  <div class="card"><h2>&#128200; World Cup Group Stage Standings</h2><div id="groups-container"><div class="loading">Loading group standings...</div></div></div>
 </div>
-
-<!-- RULES TAB -->
 <div id="tab-rules" class="tab-panel">
-  <div class="card">
-    <h2>&#128209; Pool Rules</h2>
-    <div class="rule-section">
-      <h3>Group Stage Scoring</h3>
-      <ul>
-        <li>1 point for every match point earned (Win = 3pts, Draw = 1pt)</li>
-        <li>+1 point for advancing as best 3rd place team</li>
-        <li>+3 points for finishing 2nd in group</li>
-        <li>+5 points for winning the group</li>
-      </ul>
-    </div>
-    <div class="rule-section">
-      <h3>Knockout Round Bonuses</h3>
-      <ul>
-        <li>Round of 16: +5 points</li>
-        <li>Quarterfinals: +10 points</li>
-        <li>Semifinals: +15 points</li>
-        <li>Final: +20 points</li>
-        <li>Tournament Winner: +30 points</li>
-      </ul>
-      <p style="margin-top:8px;font-size:.85rem;color:var(--muted)">All points above are multiplied by the team's tier multiplier before being added.</p>
-    </div>
-    <div class="rule-section">
-      <h3>Tier Multipliers</h3>
-      <ul>
-        <li>Tier 1 (1×): Spain, France, England</li>
-        <li>Tier 2 (1.5×): Brazil, Portugal, Argentina, Germany</li>
-        <li>Tier 3 (2×): Netherlands, Norway, Belgium, Morocco</li>
-        <li>Tier 4 (2.5×): Colombia, Mexico, Switzerland, United States</li>
-        <li>Tier 5 (3×): Senegal, Japan, Uruguay, Ecuador, Turkiye, Croatia</li>
-        <li>Tier 6 (4×): Sweden, Austria, Canada, Scotland</li>
-        <li>Tier 7 (5×): Cote D'Ivoire, Czechia, South Korea, Egypt, Ghana</li>
-        <li>Tier 8 (5.5×): Paraguay, Algeria, Bosnia &amp; Herzegovina, Tunisia, Australia</li>
-        <li>Tier 9 (6×): Iran, Saudi Arabia, South Africa, Cape Verde, DR Congo</li>
-        <li>Tier 10 (8×): Qatar, Uzbekistan, New Zealand, Panama</li>
-        <li>Tier 11 (10×): Curacao, Jordan, Haiti, Iraq</li>
-      </ul>
-    </div>
-    <div class="rule-section">
-      <h3>Special Rules</h3>
-      <ul>
-        <li><strong>Double Points Team:</strong> Pick any ONE team already in your tiers — doubles all multiplied points for that team. You MUST have that team in a tier already.</li>
-        <li><strong>Golden Boot:</strong> Pick the tournament top scorer — worth 10 flat points (no multiplier).</li>
-        <li><strong>Tiebreaker:</strong> Age (in days) of the youngest goalscorer in the tournament. Closest without going under wins.</li>
-      </ul>
-    </div>
+  <div class="card"><h2>&#128209; Pool Rules</h2>
+    <div class="rule-section"><h3>Group Stage Scoring</h3><ul>
+      <li>1 point for every match point earned (Win=3pts, Draw=1pt)</li>
+      <li>+1 point for advancing as best 3rd place team</li>
+      <li>+3 points for finishing 2nd in group</li>
+      <li>+5 points for winning the group</li>
+    </ul></div>
+    <div class="rule-section"><h3>Knockout Round Bonuses (all multiplied by tier)</h3><ul>
+      <li>Round of 16: +5 points</li><li>Quarterfinals: +10 points</li>
+      <li>Semifinals: +15 points</li><li>Final: +20 points</li><li>Tournament Winner: +30 points</li>
+    </ul></div>
+    <div class="rule-section"><h3>Tier Multipliers</h3><ul>
+      <li>Tier 1 (1&times;): Spain, France, England</li>
+      <li>Tier 2 (1.5&times;): Brazil, Portugal, Argentina, Germany</li>
+      <li>Tier 3 (2&times;): Netherlands, Norway, Belgium, Morocco</li>
+      <li>Tier 4 (2.5&times;): Colombia, Mexico, Switzerland, United States</li>
+      <li>Tier 5 (3&times;): Senegal, Japan, Uruguay, Ecuador, Turkiye, Croatia</li>
+      <li>Tier 6 (4&times;): Sweden, Austria, Canada, Scotland</li>
+      <li>Tier 7 (5&times;): Cote D'Ivoire, Czechia, South Korea, Egypt, Ghana</li>
+      <li>Tier 8 (5.5&times;): Paraguay, Algeria, Bosnia &amp; Herzegovina, Tunisia, Australia</li>
+      <li>Tier 9 (6&times;): Iran, Saudi Arabia, South Africa, Cape Verde, DR Congo</li>
+      <li>Tier 10 (8&times;): Qatar, Uzbekistan, New Zealand, Panama</li>
+      <li>Tier 11 (10&times;): Curacao, Jordan, Haiti, Iraq</li>
+    </ul></div>
+    <div class="rule-section"><h3>Special Rules</h3><ul>
+      <li><strong>Double Points Team:</strong> One team already in your tier picks — doubles all multiplied points for that team. Must be a team you already selected.</li>
+      <li><strong>Golden Boot:</strong> Correct top scorer = 10 flat points (no multiplier).</li>
+      <li><strong>Tiebreaker:</strong> Age in days of youngest goalscorer. Closest without going under wins.</li>
+    </ul></div>
   </div>
 </div>
 </main>
 <script>
-// ─── CONFIGURATION ───────────────────────────────────────────────────────────
 const API_KEY = 'YOUR_API_KEY_HERE';
-const SHEET_CSV = 'https://corsproxy.io/?' + encodeURIComponent('https://docs.google.com/spreadsheets/d/16PaPzQofq0Almk8xH19X3Rx9IpK4PI2r3rCXxXDDrBw/export?format=csv&gid=2084502933');
+const SHEET_ID = '16PaPzQofq0Almk8xH19X3Rx9IpK4PI2r3rCXxXDDrBw';
+const SHEET_GID = '2084502933';
 const API_BASE = 'https://api.football-data.org/v4';
 const COMP = 'WC';
+const PROXY = 'https://corsproxy.io/?';
 
-// ─── TIER MULTIPLIERS ────────────────────────────────────────────────────────
 const TIERS = {
   'Spain':1,'France':1,'England':1,
   'Brazil':1.5,'Portugal':1.5,'Argentina':1.5,'Germany':1.5,
@@ -198,25 +154,21 @@ const TIERS = {
   'Curacao':10,'Jordan':10,'Haiti':10,'Iraq':10
 };
 
-// ─── API NAME → POOL NAME MAPPING ────────────────────────────────────────────
 const API_MAP = {
-  "Côte d'Ivoire":"Cote D'Ivoire","Ivory Coast":"Cote D'Ivoire",
-  'Turkey':"Turkiye",'Türkiye':'Turkiye',
-  'Korea Republic':'South Korea','South Korea':'South Korea',
+  "Cote d'Ivoire":"Cote D'Ivoire","Côte d'Ivoire":"Cote D'Ivoire","Ivory Coast":"Cote D'Ivoire",
+  'Turkey':'Turkiye','Türkiye':'Turkiye',
+  'Korea Republic':'South Korea',
   'USA':'United States','United States of America':'United States',
   'Bosnia and Herzegovina':'Bosnia & Herzegovina',
-  'Czech Republic':'Czechia','Czechia':'Czechia',
-  'DR Congo':'DR Congo','Democratic Republic of Congo':'DR Congo',
-  'Cape Verde':'Cape Verde','Cabo Verde':'Cape Verde',
-  'Curaçao':'Curacao','Curacao':'Curacao'
+  'Czech Republic':'Czechia',
+  'Democratic Republic of Congo':'DR Congo','Congo DR':'DR Congo',
+  'Cabo Verde':'Cape Verde',
+  'Curaçao':'Curacao'
 };
 function toPoolName(n){ return API_MAP[n] || n; }
 
-// ─── RESULTS STATE (populated from API) ──────────────────────────────────────
 let RESULTS = {};
-// Structure per team: { matchPts:0, groupFinish:null, r16:false, qf:false, sf:false, final:false, winner:false }
 
-// ─── TAB SWITCHING ───────────────────────────────────────────────────────────
 function showTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -224,10 +176,9 @@ function showTab(id, btn) {
   btn.classList.add('active');
 }
 
-// ─── CSV PARSING ─────────────────────────────────────────────────────────────
 function parseCSV(text) {
   const rows = [];
-  const lines = text.split('\n');
+  const lines = text.replace(/\r/g,'').split('\n');
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
@@ -239,310 +190,228 @@ function parseCSV(text) {
       else { cur += line[c]; }
     }
     cols.push(cur.trim());
-    if (cols.length >= 3) rows.push(cols);
+    if (cols.length >= 2 && cols[1]) rows.push(cols);
   }
   return rows;
 }
 
-// Columns: 0=Timestamp,1=Name,2=Tier1,3=Tier2,4=Tier3,5=Tier4,6=Tier5,7=Tier6,8=Tier7,9=Tier8,10=Tier9,11=Tier10,12=Tier11,13=DoubleTeam,14=GoldenBoot,15=Tiebreaker
 function buildParticipant(row) {
   return {
-    name: row[1] || 'Unknown',
-    tier1: row[2]||'', tier2: row[3]||'', tier3: row[4]||'', tier4: row[5]||'',
-    tier5: row[6]||'', tier6: row[7]||'', tier7: row[8]||'', tier8: row[9]||'',
-    tier9: row[10]||'', tier10: row[11]||'', tier11: row[12]||'',
-    double: row[13]||'', goldenBoot: row[14]||'', tiebreaker: row[15]||''
+    name: row[1]||'',
+    tier1:row[2]||'',tier2:row[3]||'',tier3:row[4]||'',tier4:row[5]||'',
+    tier5:row[6]||'',tier6:row[7]||'',tier7:row[8]||'',tier8:row[9]||'',
+    tier9:row[10]||'',tier10:row[11]||'',tier11:row[12]||'',
+    double:row[13]||'',goldenBoot:row[14]||'',tiebreaker:row[15]||''
   };
 }
 
-// ─── SCORING ENGINE ───────────────────────────────────────────────────────────
 function calcTeamScore(team, isDouble) {
   const mult = TIERS[team] || 1;
   const r = RESULTS[team];
-  if (!r) return { raw:0, multiplied:0 };
-  
-  let pts = r.matchPts || 0;
-  if (r.groupFinish === 1) pts += 5;
-  else if (r.groupFinish === 2) pts += 3;
-  else if (r.groupFinish === 3) pts += 1;
-  if (r.r16) pts += 5;
-  if (r.qf) pts += 10;
-  if (r.sf) pts += 15;
-  if (r.final) pts += 20;
-  if (r.winner) pts += 30;
-  
-  const multiplied = pts * mult * (isDouble ? 2 : 1);
-  return { raw: pts, multiplied };
+  if (!r) return { pts:0, multiplied:0 };
+  let pts = r.matchPts||0;
+  if (r.groupFinish===1) pts+=5; else if (r.groupFinish===2) pts+=3; else if (r.groupFinish===3) pts+=1;
+  if (r.r16) pts+=5; if (r.qf) pts+=10; if (r.sf) pts+=15; if (r.final) pts+=20; if (r.winner) pts+=30;
+  return { pts, multiplied: pts * mult * (isDouble?2:1) };
 }
 
-function calcParticipantScore(p) {
+function calcScore(p) {
   const picks = [p.tier1,p.tier2,p.tier3,p.tier4,p.tier5,p.tier6,p.tier7,p.tier8,p.tier9,p.tier10,p.tier11];
-  const dbl = p.double;
   let total = 0;
   const breakdown = [];
   picks.forEach(team => {
     if (!team) return;
-    const isDouble = dbl && team.toLowerCase().trim() === dbl.toLowerCase().trim();
-    const s = calcTeamScore(team, isDouble);
+    const isDbl = p.double && team.toLowerCase().trim()===p.double.toLowerCase().trim();
+    const s = calcTeamScore(team, isDbl);
     total += s.multiplied;
-    breakdown.push({ team, multiplied: s.multiplied, isDouble });
+    breakdown.push({team, pts: s.multiplied, isDbl});
   });
-  const gbPts = (p.goldenBoot && RESULTS._goldenBoot && 
-    p.goldenBoot.toLowerCase().trim() === RESULTS._goldenBoot.toLowerCase().trim()) ? 10 : 0;
+  const gbPts = (p.goldenBoot && RESULTS._goldenBoot &&
+    p.goldenBoot.toLowerCase().trim()===RESULTS._goldenBoot.toLowerCase().trim()) ? 10 : 0;
   total += gbPts;
-  return { total, breakdown, gbPts };
+  return {total, breakdown, gbPts};
 }
 
-// ─── RENDER STANDINGS ─────────────────────────────────────────────────────────
-function renderStandings(participants) {
-  const scored = participants.map(p => {
-    const s = calcParticipantScore(p);
-    return { ...p, ...s };
-  }).sort((a,b) => b.total - a.total);
-  
-  if (scored.length === 0) {
-    document.getElementById('standings-container').innerHTML = '<div class="info-box">No submissions yet. Share your pool form to get started!</div>';
+function esc(s){ return s?(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''; }
+
+function renderStandings(ps) {
+  if (!ps.length) {
+    document.getElementById('standings-container').innerHTML = '<div class="info-box">No submissions yet. Share your pool form with friends to get started!</div>';
     return;
   }
-  
+  const scored = ps.map(p=>{const s=calcScore(p);return{...p,...s};}).sort((a,b)=>b.total-a.total);
   let html = '<table class="standings-table"><thead><tr><th>#</th><th>Name</th><th>Total Pts</th><th>GB</th><th>Top Team</th></tr></thead><tbody>';
-  scored.forEach((p, i) => {
-    const rank = i + 1;
-    const rc = rank <= 3 ? 'rank-' + rank : '';
-    const topTeam = p.breakdown.sort((a,b) => b.multiplied - a.multiplied)[0];
-    html += `<tr>
-      <td><span class="rank-badge ${rc}">${rank}</span></td>
-      <td><strong>${esc(p.name)}</strong><br><span class="pts-breakdown">${p.breakdown.filter(b=>b.multiplied>0).map(b=>b.team+' '+b.multiplied.toFixed(1)).join(', ')}</span></td>
+  scored.forEach((p,i) => {
+    const rc = i<3?'rank-'+(i+1):'';
+    const bd = [...p.breakdown].sort((a,b)=>b.pts-a.pts);
+    const top = bd[0];
+    const detail = bd.filter(b=>b.pts>0).map(b=>(b.isDbl?'2x ':'')+b.team+' '+b.pts.toFixed(1)).join(' | ');
+    html += `<tr><td><span class="rank-badge ${rc}">${i+1}</span></td>
+      <td><strong>${esc(p.name)}</strong><br><span style="font-size:.75rem;color:var(--muted)">${esc(detail)}</span></td>
       <td><span class="score-badge">${p.total.toFixed(1)}</span></td>
-      <td>${p.gbPts > 0 ? '✅' : '-'}</td>
-      <td>${topTeam ? esc(topTeam.team) + ' (' + topTeam.multiplied.toFixed(1) + ')' : '-'}</td>
-    </tr>`;
+      <td>${p.gbPts>0?'&#9989;':'-'}</td>
+      <td>${top?esc(top.team)+' ('+top.pts.toFixed(1)+')':'-'}</td></tr>`;
   });
   html += '</tbody></table>';
   document.getElementById('standings-container').innerHTML = html;
 }
 
-// ─── RENDER PICKS ─────────────────────────────────────────────────────────────
-function renderPicks(participants) {
-  if (participants.length === 0) {
-    document.getElementById('picks-container').innerHTML = '<div class="info-box">No submissions yet.</div>';
-    return;
-  }
+function renderPicks(ps) {
+  if (!ps.length) { document.getElementById('picks-container').innerHTML = '<div class="info-box">No submissions yet.</div>'; return; }
+  const tLabels = ['Tier 1 (1x)','Tier 2 (1.5x)','Tier 3 (2x)','Tier 4 (2.5x)','Tier 5 (3x)','Tier 6 (4x)','Tier 7 (5x)','Tier 8 (5.5x)','Tier 9 (6x)','Tier 10 (8x)','Tier 11 (10x)'];
+  const tKeys = ['tier1','tier2','tier3','tier4','tier5','tier6','tier7','tier8','tier9','tier10','tier11'];
   let html = '';
-  participants.forEach((p, idx) => {
-    const tiers = [
-      ['Tier 1 (1×)', p.tier1],['Tier 2 (1.5×)', p.tier2],['Tier 3 (2×)', p.tier3],
-      ['Tier 4 (2.5×)', p.tier4],['Tier 5 (3×)', p.tier5],['Tier 6 (4×)', p.tier6],
-      ['Tier 7 (5×)', p.tier7],['Tier 8 (5.5×)', p.tier8],['Tier 9 (6×)', p.tier9],
-      ['Tier 10 (8×)', p.tier10],['Tier 11 (10×)', p.tier11]
-    ];
-    html += `<div class="pick-card">
-      <h3 onclick="togglePick(${idx})"><span>${esc(p.name)}</span><span>&#9660;</span></h3>
+  ps.forEach((p,idx) => {
+    html += `<div class="pick-card"><h3 onclick="togglePick(${idx})"><span>${esc(p.name)}</span><span>&#9660;</span></h3>
       <div id="pick-${idx}" class="pick-details">
-        ${tiers.map(([label,val]) => val ? `<div class="pick-item"><strong>${label}</strong>${esc(val)}</div>` : '').join('')}
+        ${tKeys.map((k,i)=>p[k]?`<div class="pick-item"><strong>${tLabels[i]}</strong>${esc(p[k])}</div>`:'').join('')}
         <div class="pick-item"><strong>Double Points</strong>${esc(p.double||'—')}</div>
         <div class="pick-item"><strong>Golden Boot</strong>${esc(p.goldenBoot||'—')}</div>
         <div class="pick-item"><strong>Tiebreaker</strong>${esc(p.tiebreaker||'—')}</div>
-      </div>
-    </div>`;
+      </div></div>`;
   });
   document.getElementById('picks-container').innerHTML = html;
 }
 
-function togglePick(idx) {
-  const el = document.getElementById('pick-' + idx);
-  if (el) el.classList.toggle('open');
-}
+function togglePick(idx) { const el=document.getElementById('pick-'+idx); if(el) el.classList.toggle('open'); }
 
-// ─── RENDER MATCHES ───────────────────────────────────────────────────────────
-function renderMatches(matches, containerId, emptyMsg) {
-  if (!matches || matches.length === 0) {
-    document.getElementById(containerId).innerHTML = `<div class="info-box">${emptyMsg}</div>`;
-    return;
-  }
+function formatTime(u){ if(!u) return ''; const d=new Date(u); return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); }
+
+function renderMatches(matches, cid, empty) {
+  if (!matches||!matches.length){ document.getElementById(cid).innerHTML=`<div class="info-box">${empty}</div>`; return; }
   let html = '';
   matches.forEach(m => {
-    const home = m.homeTeam?.name || '?';
-    const away = m.awayTeam?.name || '?';
-    const score = m.score?.fullTime;
-    const scoreStr = score && score.home !== null ? `${score.home} - ${score.away}` : 'vs';
-    const status = m.status;
-    const statusClass = status === 'FINISHED' ? 'status-ft' : status === 'IN_PLAY' || status === 'PAUSED' ? 'status-live' : 'status-sched';
-    const statusLabel = status === 'FINISHED' ? 'FT' : status === 'IN_PLAY' ? 'LIVE' : status === 'PAUSED' ? 'HT' : formatTime(m.utcDate);
-    html += `<div class="match-card">
-      <div class="match-teams">
-        <div class="home">${esc(home)}</div>
-        <div class="away">${esc(away)}</div>
-        <div class="match-meta">${m.group||m.stage||''}</div>
-      </div>
+    const home=m.homeTeam?.name||'?', away=m.awayTeam?.name||'?';
+    const sc=m.score?.fullTime;
+    const scoreStr = sc&&sc.home!==null?`${sc.home} - ${sc.away}`:'vs';
+    const st=m.status;
+    const cls=st==='FINISHED'?'status-ft':st==='IN_PLAY'||st==='PAUSED'?'status-live':'status-sched';
+    const lbl=st==='FINISHED'?'FT':st==='IN_PLAY'?'LIVE':st==='PAUSED'?'HT':formatTime(m.utcDate);
+    html+=`<div class="match-card">
+      <div class="match-teams"><div class="home">${esc(home)}</div><div class="away">${esc(away)}</div>
+      <div class="match-meta">${esc(m.group||m.stage||'')}</div></div>
       <div class="match-score">${scoreStr}</div>
-      <span class="match-status ${statusClass}">${statusLabel}</span>
-    </div>`;
+      <span class="match-status ${cls}">${lbl}</span></div>`;
   });
-  document.getElementById(containerId).innerHTML = html;
+  document.getElementById(cid).innerHTML = html;
 }
 
-function formatTime(utcStr) {
-  if (!utcStr) return '';
-  const d = new Date(utcStr);
-  return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-}
-
-// ─── RENDER GROUPS ────────────────────────────────────────────────────────────
 function renderGroups(standings) {
-  if (!standings || standings.length === 0) {
-    document.getElementById('groups-container').innerHTML = '<div class="info-box">Group standings will appear once the tournament begins.</div>';
-    return;
-  }
-  const groups = {};
-  standings.forEach(entry => {
-    const g = entry.group || 'Unknown';
-    if (!groups[g]) groups[g] = [];
-    groups[g].push(entry);
-  });
-  let html = '<div class="groups-grid">';
+  if (!standings||!standings.length){ document.getElementById('groups-container').innerHTML='<div class="info-box">Group standings will appear once the tournament begins.</div>'; return; }
+  const groups={};
+  standings.forEach(e=>{ const g=e.group||'?'; if(!groups[g]) groups[g]=[]; groups[g].push(e); });
+  let html='<div class="groups-grid">';
   Object.keys(groups).sort().forEach(g => {
-    const teams = groups[g].sort((a,b) => (b.points||0) - (a.points||0) || (b.goalDifference||0) - (a.goalDifference||0));
-    html += `<div class="group-section"><h3>Group ${g.replace('GROUP_','')}</h3><table class="group-table"><thead><tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead><tbody>`;
-    teams.forEach((t,i) => {
-      const adv = i < 2 ? 'style="background:#e8f5e9"' : '';
-      html += `<tr ${adv}><td>${esc(t.team?.name||'?')}</td><td>${t.playedGames||0}</td><td>${t.won||0}</td><td>${t.draw||0}</td><td>${t.lost||0}</td><td>${t.goalDifference||0}</td><td><strong>${t.points||0}</strong></td></tr>`;
+    const teams=groups[g].sort((a,b)=>(b.points||0)-(a.points||0)||(b.goalDifference||0)-(a.goalDifference||0));
+    html+=`<div class="group-section"><h3>Group ${g.replace('GROUP_','')}</h3>
+      <table class="group-table"><thead><tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead><tbody>`;
+    teams.forEach((t,i)=>{ const adv=i<2?'style="background:#e8f5e9"':'';
+      html+=`<tr ${adv}><td>${esc(t.team?.name||'?')}</td><td>${t.playedGames||0}</td><td>${t.won||0}</td><td>${t.draw||0}</td><td>${t.lost||0}</td><td>${t.goalDifference||0}</td><td><strong>${t.points||0}</strong></td></tr>`;
     });
-    html += '</tbody></table></div>';
+    html+='</tbody></table></div>';
   });
-  html += '</div>';
-  document.getElementById('groups-container').innerHTML = html;
+  html+='</div>';
+  document.getElementById('groups-container').innerHTML=html;
 }
 
-// ─── UTILITY ─────────────────────────────────────────────────────────────────
-function esc(s) {
-  if (!s) return '';
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ─── API FETCHER ──────────────────────────────────────────────────────────────
 async function apiGet(path) {
-  if (!API_KEY || API_KEY === 'YOUR_API_KEY_HERE') return null;
-  const proxy = 'https://corsproxy.io/?' + encodeURIComponent(API_BASE + path);
+  if (!API_KEY||API_KEY==='YOUR_API_KEY_HERE') return null;
   try {
-    const r = await fetch(proxy, { headers: { 'X-Auth-Token': API_KEY } });
+    const r = await fetch(PROXY+encodeURIComponent(API_BASE+path),{headers:{'X-Auth-Token':API_KEY}});
     if (!r.ok) return null;
     return await r.json();
-  } catch(e) { return null; }
+  } catch(e){ return null; }
 }
 
-// ─── LOAD POOL DATA ───────────────────────────────────────────────────────────
 async function loadPoolData() {
+  const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
   try {
-    const r = await fetch(SHEET_CSV);
+    const r = await fetch(PROXY + encodeURIComponent(csvUrl));
     const text = await r.text();
+    // Validate it's actually CSV (first line should be headers with commas)
+    const firstLine = text.split('\n')[0]||'';
+    if (!firstLine.includes(',') || firstLine.toLowerCase().includes('<html') || firstLine.toLowerCase().includes('<!doctype')) {
+      const msg = '<div class="warn-box"><strong>&#9888; Google Sheet not yet published as CSV.</strong><br><br>To fix this:<ol style="margin-top:8px;padding-left:18px;line-height:2"><li>Open your <a href="https://docs.google.com/spreadsheets/d/' + SHEET_ID + '" target="_blank">Google Sheet</a></li><li>Click <strong>File &rarr; Share &rarr; Publish to web</strong></li><li>Select <strong>Form Responses 1</strong> sheet and <strong>CSV</strong> format</li><li>Click <strong>Publish</strong> and confirm</li><li>Refresh this page</li></ol></div>';
+      document.getElementById('standings-container').innerHTML = msg;
+      document.getElementById('picks-container').innerHTML = msg;
+      return [];
+    }
     const rows = parseCSV(text);
-    const participants = rows.map(buildParticipant).filter(p => p.name && p.name !== 'Submission Name');
-    renderStandings(participants);
-    renderPicks(participants);
-    return participants;
+    const ps = rows.map(buildParticipant).filter(p=>p.name && p.name!=='Submission Name' && !p.name.includes('function'));
+    renderStandings(ps);
+    renderPicks(ps);
+    return ps;
   } catch(e) {
-    document.getElementById('standings-container').innerHTML = '<div class="error-msg">Could not load pool data. Make sure the Google Sheet is published as CSV (File → Share → Publish to web → CSV).</div>';
-    document.getElementById('picks-container').innerHTML = '<div class="error-msg">Could not load picks data.</div>';
+    const msg = '<div class="error-msg">Could not load pool data. Make sure the Google Sheet is published (File &rarr; Share &rarr; Publish to web &rarr; CSV).</div>';
+    document.getElementById('standings-container').innerHTML = msg;
+    document.getElementById('picks-container').innerHTML = msg;
     return [];
   }
 }
 
-// ─── LOAD TOURNAMENT RESULTS FROM API ────────────────────────────────────────
 async function loadTournamentResults() {
-  const data = await apiGet('/competitions/' + COMP + '/matches?status=FINISHED');
-  if (!data || !data.matches) return;
-  
-  // Reset results
+  const data = await apiGet('/competitions/'+COMP+'/matches?status=FINISHED');
+  if (!data||!data.matches) return;
   RESULTS = {};
-  
   data.matches.forEach(m => {
-    const home = toPoolName(m.homeTeam?.name || '');
-    const away = toPoolName(m.awayTeam?.name || '');
-    const hs = m.score?.fullTime?.home;
-    const as_ = m.score?.fullTime?.away;
-    if (hs === null || as_ === null) return;
-    
-    if (!RESULTS[home]) RESULTS[home] = {matchPts:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
-    if (!RESULTS[away]) RESULTS[away] = {matchPts:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
-    
-    const stage = m.stage || '';
-    if (stage === 'GROUP_STAGE') {
-      if (hs > as_) { RESULTS[home].matchPts += 3; }
-      else if (hs === as_) { RESULTS[home].matchPts += 1; RESULTS[away].matchPts += 1; }
-      else { RESULTS[away].matchPts += 3; }
+    const home=toPoolName(m.homeTeam?.name||''), away=toPoolName(m.awayTeam?.name||'');
+    const hs=m.score?.fullTime?.home, as_=m.score?.fullTime?.away;
+    if (hs===null||as_===null||hs===undefined) return;
+    if (!RESULTS[home]) RESULTS[home]={matchPts:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
+    if (!RESULTS[away]) RESULTS[away]={matchPts:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
+    const stage=m.stage||'';
+    if (stage==='GROUP_STAGE') {
+      if (hs>as_) RESULTS[home].matchPts+=3;
+      else if (hs===as_) { RESULTS[home].matchPts+=1; RESULTS[away].matchPts+=1; }
+      else RESULTS[away].matchPts+=3;
     }
-    
-    // Knockout progression
-    const stageMap = {
-      'ROUND_OF_16':'r16','QUARTER_FINALS':'qf','SEMI_FINALS':'sf',
-      'FINAL':'final','THIRD_PLACE':'sf'
-    };
-    const key = stageMap[stage];
+    const sm={'ROUND_OF_16':'r16','QUARTER_FINALS':'qf','SEMI_FINALS':'sf','FINAL':'final','THIRD_PLACE':'sf'};
+    const key=sm[stage];
     if (key) {
-      RESULTS[home][key] = true;
-      RESULTS[away][key] = true;
-      // Winner advances further
-      let winner = null;
-      if (hs > as_) winner = home;
-      else if (as_ > hs) winner = away;
-      else {
-        const pen = m.score?.penalties;
-        if (pen) winner = pen.home > pen.away ? home : away;
+      RESULTS[home][key]=true; RESULTS[away][key]=true;
+      let win=null;
+      if (hs>as_) win=home; else if (as_>hs) win=away;
+      else { const p=m.score?.penalties; if(p) win=p.home>p.away?home:away; }
+      if (win) {
+        if (stage==='FINAL') RESULTS[win].winner=true;
+        else if (stage==='ROUND_OF_16') RESULTS[win].qf=true;
+        else if (stage==='QUARTER_FINALS') RESULTS[win].sf=true;
+        else if (stage==='SEMI_FINALS') RESULTS[win].final=true;
       }
-      if (winner && stage === 'FINAL') RESULTS[winner].winner = true;
-      if (winner && stage === 'ROUND_OF_16') RESULTS[winner].qf = true;
-      if (winner && stage === 'QUARTER_FINALS') RESULTS[winner].sf = true;
-      if (winner && stage === 'SEMI_FINALS') RESULTS[winner].final = true;
     }
   });
-  
-  // Load group standings for finish positions
-  const gs = await apiGet('/competitions/' + COMP + '/standings');
-  if (gs && gs.standings) {
-    gs.standings.forEach(group => {
-      if (group.type !== 'TOTAL') return;
-      group.table.forEach((entry, idx) => {
-        const team = toPoolName(entry.team?.name || '');
-        if (!RESULTS[team]) RESULTS[team] = {matchPts:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
-        RESULTS[team].groupFinish = idx + 1; // 1=1st, 2=2nd, 3=3rd
+  const gs=await apiGet('/competitions/'+COMP+'/standings');
+  if (gs&&gs.standings) {
+    gs.standings.forEach(g=>{
+      if (g.type!=='TOTAL') return;
+      g.table.forEach((e,i)=>{ const t=toPoolName(e.team?.name||'');
+        if (!RESULTS[t]) RESULTS[t]={matchPts:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
+        RESULTS[t].groupFinish=i+1;
       });
     });
   }
 }
 
-// ─── LOAD TODAY/TOMORROW MATCHES ─────────────────────────────────────────────
 async function loadDayMatches() {
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const fmt = d => d.toISOString().split('T')[0];
-  
-  const todayData = await apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(today)}&dateTo=${fmt(today)}`);
-  renderMatches(todayData?.matches, 'scores-container', 'No matches scheduled for today.');
-  
-  const tomorrowData = await apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(tomorrow)}&dateTo=${fmt(tomorrow)}`);
-  renderMatches(tomorrowData?.matches, 'fixtures-container', 'No matches scheduled for tomorrow.');
+  const today=new Date(), tom=new Date(today);
+  tom.setDate(tom.getDate()+1);
+  const fmt=d=>d.toISOString().split('T')[0];
+  const td=await apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(today)}&dateTo=${fmt(today)}`);
+  if (!td) { document.getElementById('scores-container').innerHTML='<div class="warn-box">Add your API key to see live scores.</div>'; }
+  else renderMatches(td.matches,'scores-container','No World Cup matches today.');
+  const tm=await apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(tom)}&dateTo=${fmt(tom)}`);
+  if (!tm) { document.getElementById('fixtures-container').innerHTML='<div class="warn-box">Add your API key to see fixtures.</div>'; }
+  else renderMatches(tm.matches,'fixtures-container','No World Cup matches tomorrow.');
 }
 
-// ─── LOAD GROUP STANDINGS ─────────────────────────────────────────────────────
 async function loadGroupStandings() {
-  const data = await apiGet('/competitions/' + COMP + '/standings');
-  if (!data) {
-    document.getElementById('groups-container').innerHTML = '<div class="error-msg">Could not load group standings. Please add your API key.</div>';
-    return;
-  }
-  const allEntries = [];
-  if (data.standings) {
-    data.standings.forEach(g => {
-      if (g.type !== 'TOTAL') return;
-      g.table.forEach(entry => allEntries.push({...entry, group: g.group}));
-    });
-  }
-  renderGroups(allEntries);
+  const data=await apiGet('/competitions/'+COMP+'/standings');
+  if (!data) { document.getElementById('groups-container').innerHTML='<div class="warn-box">Add your API key to see group standings.</div>'; return; }
+  const all=[];
+  if (data.standings) data.standings.forEach(g=>{ if(g.type!=='TOTAL') return; g.table.forEach(e=>all.push({...e,group:g.group})); });
+  renderGroups(all);
 }
 
-// ─── MAIN LOAD ────────────────────────────────────────────────────────────────
 async function loadAll() {
   await loadTournamentResults();
   await loadPoolData();
@@ -551,14 +420,12 @@ async function loadAll() {
 }
 
 async function refreshAll() {
-  document.getElementById('standings-container').innerHTML = '<div class="loading">Refreshing...</div>';
-  document.getElementById('scores-container').innerHTML = '<div class="loading">Loading...</div>';
-  document.getElementById('fixtures-container').innerHTML = '<div class="loading">Loading...</div>';
-  document.getElementById('groups-container').innerHTML = '<div class="loading">Loading...</div>';
+  ['standings-container','scores-container','fixtures-container','groups-container'].forEach(id=>{
+    document.getElementById(id).innerHTML='<div class="loading">Refreshing...</div>';
+  });
   await loadAll();
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', loadAll);
 </script>
 </body>
