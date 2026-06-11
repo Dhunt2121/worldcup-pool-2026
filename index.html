@@ -89,6 +89,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 <button onclick="showTab('fixtures',this)">&#128197; Latest Fixtures</button>
 <button onclick="showTab('groups',this)">&#128200; Group Stage</button>
 <button onclick="showTab('rules',this)">&#128209; Rules</button>
+<button onclick="showTab('golden',this)">⚽ Golden Boot</button>
 </nav>
 </header>
 <main>
@@ -135,6 +136,9 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
       <li><strong>Tiebreaker:</strong> Age in days of youngest goalscorer. Closest without going under wins.</li>
     </ul></div>
   </div>
+</div>
+<div id="tab-golden" class="tab-panel">
+<div class="card"><h2>⚽ Golden Boot Race</h2><div id="golden-boot-container"><div class="loading">Loading...</div></div></div>
 </div>
 </main>
 <script>
@@ -199,6 +203,7 @@ const API_MAP = {
 function toPoolName(n){ return API_MAP[n] || n; }
 
 let RESULTS = {};
+let PARTICIPANTS = [];
 
 // ─── TAB SWITCHING ───────────────────────────────────────────────────────────
 function showTab(id, btn) {
@@ -552,6 +557,7 @@ async function loadPoolData() {
     const ps = rows.map(buildParticipant).filter(p => p.name && p.name !== 'Submission Name' && !p.name.includes('{'));
     renderStandings(ps);
     renderPicks(ps);
+    PARTICIPANTS = ps;
     return ps;
   } catch(e) {
     const msg = '<div class="error-msg">Could not load pool data: ' + e.message + '</div>';
@@ -612,15 +618,76 @@ async function loadGroupStandings() {
 }
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
+// ─── LOAD GOLDEN BOOT ──────────────────────────────────────────────────────
+async function loadGoldenBoot() {
+  const el = document.getElementById('golden-boot-container');
+  if (!el) return;
+  try {
+    const data = await apiGet('/competitions/' + COMP + '/scorers?limit=20');
+    if (!data || !data.scorers || !data.scorers.length) {
+      el.innerHTML = '<div class="warn-box">Golden boot data not yet available.</div>';
+      return;
+    }
+    // Set the leading scorer on RESULTS for pool scoring
+    const top = data.scorers[0];
+    RESULTS._goldenBoot = top.player?.name || '';
+    RESULTS._scorers = data.scorers;
+
+    // Build a map of scorer name -> participants who picked them
+    const pickedBy = {};
+    PARTICIPANTS.forEach(p => {
+      if (!p.goldenBoot) return;
+      const key = p.goldenBoot.toLowerCase().trim();
+      if (!pickedBy[key]) pickedBy[key] = [];
+      pickedBy[key].push(p.name);
+    });
+
+    let html = '<table class="standings-table"><thead><tr>'
+      + '<th>#</th><th>Player</th><th>Team</th><th style="text-align:center">Goals</th><th style="text-align:center">Assists</th><th>Picked By</th>'
+      + '</tr></thead><tbody>';
+
+    data.scorers.forEach((s, i) => {
+      const name = s.player?.name || '?';
+      const team = toPoolName(s.team?.name || '?');
+      const goals = s.goals ?? s.numberOfGoals ?? 0;
+      const assists = s.assists ?? 0;
+      const key = name.toLowerCase().trim();
+      const pickers = pickedBy[key] || [];
+      const isLeader = i === 0;
+      const pickerHtml = pickers.length
+        ? pickers.map(n => `<span style="display:inline-block;background:var(--accent);color:#fff;border-radius:10px;padding:2px 8px;font-size:.75rem;margin:1px">${esc(n)}</span>`).join(' ')
+        : '<span style="color:var(--muted);font-size:.8rem">—</span>';
+      const rowStyle = isLeader ? ' style="background:#fffbeb"' : '';
+      const rankBadge = `<span class="rank-badge${i < 3 ? ' rank-' + (i+1) : ''}">${i+1}</span>`;
+      html += `<tr${rowStyle}><td>${rankBadge}</td><td style="font-weight:600">${esc(name)}${isLeader ? ' ⭐' : ''}</td><td>${esc(team)}</td><td style="text-align:center;font-weight:700;font-size:1.05rem">${goals}</td><td style="text-align:center">${assists}</td><td>${pickerHtml}</td></tr>`;
+    });
+
+    html += '</tbody></table>';
+
+    // Show how many participants' golden boot picks are in contention
+    const totalPicked = PARTICIPANTS.filter(p => p.goldenBoot).length;
+    const inTop20 = PARTICIPANTS.filter(p => {
+      if (!p.goldenBoot) return false;
+      return data.scorers.some(s => (s.player?.name||'').toLowerCase().trim() === p.goldenBoot.toLowerCase().trim());
+    }).length;
+    const summary = `<div class="info-box" style="margin-bottom:14px">⚽ <strong>${totalPicked}</strong> participants have a golden boot pick. <strong>${inTop20}</strong> of those are in the top 20 scorers. Current leader: <strong>${esc(top.player?.name||'?')}</strong> (${top.goals ?? top.numberOfGoals ?? 0} goals).</div>`;
+
+    el.innerHTML = summary + html;
+  } catch(e) {
+    document.getElementById('golden-boot-container').innerHTML = '<div class="error-msg">Could not load golden boot data: ' + esc(e.message) + '</div>';
+  }
+}
+
 async function loadAll() {
   await loadTournamentResults();
   await loadPoolData();
   await loadLatestFixtures();
   await loadGroupStandings();
+  await loadGoldenBoot();
 }
 
 async function refreshAll() {
-  ['standings-container','fixtures-container','groups-container','picks-container'].forEach(id => {
+  ['standings-container','fixtures-container','groups-container','picks-container','golden-boot-container'].forEach(id => {
     document.getElementById(id).innerHTML = '<div class="loading">Refreshing...</div>';
   });
   await loadAll();
