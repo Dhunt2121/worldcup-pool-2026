@@ -553,15 +553,31 @@ async function loadPoolData() {
 
 // ─── LOAD TODAY'S SCORES ──────────────────────────────────────────────────────
 async function loadLatestFixtures() {
+  // Use ET (America/New_York) for date boundaries so the calendar matches
+  // what viewers in Eastern Time see, not UTC
+  function getETDateStr(d) {
+    return d.toLocaleDateString('en-CA', {timeZone: 'America/New_York'});
+  }
   const now = new Date();
-  const fmt = d => d.toISOString().split('T')[0];
-  const yesterday = new Date(now); yesterday.setDate(now.getDate() - 1);
-  const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1);
+  const todayStr = getETDateStr(now);
+
+  // Build yesterday and tomorrow by offsetting the ET date string
+  const [y, m, d] = todayStr.split('-').map(Number);
+  const todayDate = new Date(y, m - 1, d);
+  const yesterdayDate = new Date(y, m - 1, d - 1);
+  const tomorrowDate = new Date(y, m - 1, d + 1);
+
+  function fmtLocal(date) {
+    const yy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yy}-${mm}-${dd}`;
+  }
 
   const [dYest, dToday, dTomorrow] = await Promise.all([
-    apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(yesterday)}&dateTo=${fmt(yesterday)}`),
-    apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(now)}&dateTo=${fmt(now)}`),
-    apiGet(`/competitions/${COMP}/matches?dateFrom=${fmt(tomorrow)}&dateTo=${fmt(tomorrow)}`)
+    apiGet(`/competitions/${COMP}/matches?dateFrom=${fmtLocal(yesterdayDate)}&dateTo=${fmtLocal(yesterdayDate)}`),
+    apiGet(`/competitions/${COMP}/matches?dateFrom=${fmtLocal(todayDate)}&dateTo=${fmtLocal(todayDate)}`),
+    apiGet(`/competitions/${COMP}/matches?dateFrom=${fmtLocal(tomorrowDate)}&dateTo=${fmtLocal(tomorrowDate)}`)
   ]);
 
   const container = document.getElementById('fixtures-container');
