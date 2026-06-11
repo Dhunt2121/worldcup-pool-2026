@@ -511,6 +511,7 @@ async function loadTournamentResults() {
   // Group finish — only assign if games have been played in that group
   const gs = await apiGet('/competitions/' + COMP + '/standings');
   if (gs && gs.standings) {
+    const thirdPlaceTeams = [];
     gs.standings.forEach(group => {
       if (group.type !== 'TOTAL') return;
       // Check if any team in this group has played a game
@@ -521,10 +522,19 @@ async function loadTournamentResults() {
         if (!RESULTS[t]) RESULTS[t] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
         RESULTS[t].groupFinish = i + 1;
         RESULTS[t].gamesPlayed = e.playedGames || 0;
+        if (i === 2) {
+          thirdPlaceTeams.push({ team: t, pts: e.points||0, gd: (e.goalsFor||0)-(e.goalsAgainst||0), gf: e.goalsFor||0 });
+        }
       });
     });
+    // Only the best 8 third-place teams advance; demote the rest to groupFinish 4
+    if (thirdPlaceTeams.length > 8) {
+      thirdPlaceTeams.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
+      thirdPlaceTeams.slice(8).forEach(({ team }) => {
+        if (RESULTS[team]) RESULTS[team].groupFinish = 4;
+      });
+    }
   }
-}
 
 // ─── LOAD POOL DATA ───────────────────────────────────────────────────────────
 async function loadPoolData() {
