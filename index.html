@@ -288,21 +288,25 @@ function calcTeamScore(team, isDouble) {
   const mult = TIERS[team] || 1;
   const r = RESULTS[team];
   if (!r) return { pts:0, multiplied:0 };
-  let pts = r.matchPts || 0;
-  // Only award group finish bonuses if games have actually been played
-  if (r.gamesPlayed > 0) {
-    if (r.groupFinish === 1) pts += 5;
-    else if (r.groupFinish === 2) pts += 3;
-    else if (r.groupFinish === 3) pts += 1;
+  // Group stage match points x tier multiplier, then doubled if double-pick
+  const matchScore = (r.matchPts || 0) * mult * (isDouble ? 2 : 1);
+  // Group finish bonuses: only after all 3 group games played, NOT multiplied by tier
+  let groupBonus = 0;
+  if (r.gamesPlayed >= 3) {
+    if (r.groupFinish === 1) groupBonus = 5;
+    else if (r.groupFinish === 2) groupBonus = 3;
+    else if (r.groupFinish === 3) groupBonus = 1;
   }
-  if (r.r16) pts += 5;
-  if (r.qf) pts += 10;
-  if (r.sf) pts += 15;
-  if (r.final) pts += 20;
-  if (r.winner) pts += 30;
-  return { pts, multiplied: pts * mult * (isDouble ? 2 : 1) };
+  // Knockout bonuses: flat points, NOT multiplied by tier
+  let knockoutBonus = 0;
+  if (r.r16) knockoutBonus += 5;
+  if (r.qf) knockoutBonus += 10;
+  if (r.sf) knockoutBonus += 15;
+  if (r.final) knockoutBonus += 20;
+  if (r.winner) knockoutBonus += 30;
+  const total = matchScore + groupBonus + knockoutBonus;
+  return { pts: (r.matchPts || 0) * mult, multiplied: total };
 }
-
 function calcScore(p) {
   const picks = [p.tier1,p.tier2,p.tier3,p.tier4,p.tier5,p.tier6,p.tier7,p.tier8,p.tier9,p.tier10,p.tier11];
   let total = 0;
