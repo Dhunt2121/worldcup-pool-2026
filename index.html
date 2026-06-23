@@ -6,7 +6,7 @@
 <title>2026 World Cup Pool Dashboard</title>
 <style>
 :root{--primary:#1a3c5e;--accent:#c8a84b;--green:#2d7a41;--red:#c0392b;--light:#f4f6f9;--card:#fff;--border:#dde1e7;--text:#1e2532;--muted:#6b7280}
-*{box-sizing:border-box;margin:0;padding:0}hh
+*{box-sizing:border-box;margin:0;padding:0}hhh
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--light);color:var(--text)}
 header{background:linear-gradient(135deg,#0a2342 0%,#1a3c5e 60%,#0d5c2e 100%);color:#fff;padding:20px 24px 0;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.3)}
 header h1{font-size:1.9rem;letter-spacing:.5px;margin-bottom:4px}
@@ -202,6 +202,12 @@ const API_MAP = {
 };
 function toPoolName(n){ return API_MAP[n] || n; }
 
+const PLAYER_MAP = {
+  'mbappe':'Kylian Mbappé',
+  'kylian mbappe':'Kylian Mbappé'
+};
+function toPlayerName(n){ return PLAYER_MAP[n.toLowerCase().trim()] || n; }
+
 let RESULTS = {};
 let PARTICIPANTS = [];
 
@@ -316,7 +322,7 @@ function calcScore(p) {
     breakdown.push({ team, pts: s.multiplied, isDbl });
   });
   const gbPts = (p.goldenBoot && RESULTS._goldenBoot &&
-    p.goldenBoot.toLowerCase().trim() === RESULTS._goldenBoot.toLowerCase().trim()) ? 10 : 0;
+    toPlayerName(p.goldenBoot).toLowerCase().trim() === RESULTS._goldenBoot.toLowerCase().trim()) ? 10 : 0;
   total += gbPts;
   return { total, breakdown, gbPts };
 }
@@ -638,7 +644,7 @@ async function loadGoldenBoot() {
     const pickedBy = {};
     PARTICIPANTS.forEach(p => {
       if (!p.goldenBoot) return;
-      const key = p.goldenBoot.toLowerCase().trim();
+      const key = toPlayerName(p.goldenBoot).toLowerCase().trim();
       if (!pickedBy[key]) pickedBy[key] = [];
       pickedBy[key].push(p.name);
     });
