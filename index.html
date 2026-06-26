@@ -101,7 +101,7 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
 <button onclick="showTab('fixtures',this)">&#128197; Latest Fixtures</button>
 <button onclick="showTab('groups',this)">&#128200; Group Stage</button>
 <button onclick="showTab('rules',this)">&#128209; Rules</button>
-<button onclick="showTab('golden',this)">Ã¢ÂÂ½ Golden Boot</button>
+<button onclick="showTab('golden',this)">&#9917; Golden Boot</button>
 <button onclick="showTab('bracket',this)">&#127942; Bracket</button>
 </nav>
 </header>
@@ -144,21 +144,21 @@ main{max-width:1200px;margin:0 auto;padding:24px 16px}
       <li>Tier 11 (10&times;): Curacao, Jordan, Haiti, Iraq</li>
     </ul></div>
     <div class="rule-section"><h3>Special Rules</h3><ul>
-      <li><strong>Double Points Team:</strong> One team already in your tier picks Ã¢ÂÂ doubles all multiplied points for that team throughout the tournament.</li>
+      <li><strong>Double Points Team:</strong> One team already in your tier picks &mdash; doubles all multiplied points for that team throughout the tournament.</li>
       <li><strong>Golden Boot:</strong> Correct top scorer = 10 flat points (no multiplier).</li>
       <li><strong>Tiebreaker:</strong> Age in days of youngest goalscorer. Closest without going under wins.</li>
     </ul></div>
   </div>
 </div>
 <div id="tab-golden" class="tab-panel">
-<div class="card"><h2>Ã¢ÂÂ½ Golden Boot Race</h2><div id="golden-boot-container"><div class="loading">Loading...</div></div></div>
+<div class="card"><h2>&#9917; Golden Boot Race</h2><div id="golden-boot-container"><div class="loading">Loading...</div></div></div>
 </div>
 <div id="tab-bracket" class="tab-panel">
 <div class="card"><h2>&#127942; Knockout Bracket</h2><div id="bracket-container"><div class="loading">Loading...</div></div></div>
 </div>
 </main>
 <script>
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ CONFIG Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; CONFIG &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 const API_KEY = '4b7b78f60fa543ada585c5815f2aac24';
 const SHEET_CSV = 'https://corsproxy.io/?' + encodeURIComponent('https://docs.google.com/spreadsheets/d/e/2PACX-1vSZOF_or5NjbIHLnQrCcSFaNlsbBvCpfizhNcPzictpw0ikAigYKDJhSoFd4a697n3oRoomn6o6jtEv/pub?gid=2084502933&single=true&output=csv');
 const API_BASE = 'https://api.football-data.org/v4';
@@ -168,9 +168,9 @@ const PROXY = 'https://corsproxy.io/?';
 // Tournament start: June 11 2026 at 3pm ET = 19:00 UTC
 const TOURNAMENT_START = new Date('2026-06-11T19:00:00Z');
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ VENUE LOOKUP (Group stage matchday 1 host cities) Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; VENUE LOOKUP (Group stage matchday 1 host cities) &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 // Based on 2026 World Cup host cities. Keyed by team IDs or match IDs where possible.
-// We'll map group Ã¢ÂÂ city for simplicity since host cities are assigned per group.
+// We'll map group &#8594; city for simplicity since host cities are assigned per group.
 const GROUP_CITY = {
   'GROUP_A': 'Los Angeles, CA',
   'GROUP_B': 'Toronto, Canada',
@@ -190,7 +190,7 @@ const GROUP_CITY = {
   'FINAL': 'New York / New Jersey'
 };
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ TIERS Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; TIERS &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 const TIERS = {
   'Spain':1,'France':1,'England':1,
   'Brazil':1.5,'Portugal':1.5,'Argentina':1.5,'Germany':1.5,
@@ -206,28 +206,28 @@ const TIERS = {
 };
 
 const API_MAP = {
-  "Cote d'Ivoire":"Cote D'Ivoire","CÃÂ´te d'Ivoire":"Cote D'Ivoire","Ivory Coast":"Cote D'Ivoire",
-  'Turkey':'Turkiye','TÃÂ¼rkiye':'Turkiye',
+  "Cote d'Ivoire":"Cote D'Ivoire","Côte d'Ivoire":"Cote D'Ivoire","Ivory Coast":"Cote D'Ivoire",
+  'Turkey':'Turkiye','Türkiye':'Turkiye',
   'Korea Republic':'South Korea',
   'USA':'United States','United States of America':'United States',
   'Bosnia and Herzegovina':'Bosnia & Herzegovina','Bosnia-Herzegovina':'Bosnia & Herzegovina',
   'Czech Republic':'Czechia',
   'Democratic Republic of Congo':'DR Congo','Congo DR':'DR Congo',
   'Cabo Verde':'Cape Verde','Cape Verde Islands':'Cape Verde',
-  'CuraÃÂ§ao':'Curacao'
+  'Curaçao':'Curacao'
 };
 function toPoolName(n){ return API_MAP[n] || n; }
 
 const PLAYER_MAP = {
-  'mbappe':'Kylian MbappÃÂ©',
-  'kylian mbappe':'Kylian MbappÃÂ©'
+  'mbappe':'Kylian Mbappé',
+  'kylian mbappe':'Kylian Mbappé'
 };
 function toPlayerName(n){ return PLAYER_MAP[n.toLowerCase().trim()] || n; }
 
 let RESULTS = {};
 let PARTICIPANTS = [];
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ TAB SWITCHING Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; TAB SWITCHING &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 function showTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -235,7 +235,7 @@ function showTab(id, btn) {
   btn.classList.add('active');
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ UTILITIES Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; UTILITIES &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 function esc(s){ return s?(s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''; }
 
 function toET(utcStr) {
@@ -275,7 +275,7 @@ function toETDateOnly(utcStr) {
   });
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ CSV PARSING Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; CSV PARSING &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 function parseCSV(text) {
   const rows = [];
   const lines = text.replace(/\r/g,'').split('\n');
@@ -305,7 +305,7 @@ function buildParticipant(row) {
   };
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ SCORING Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; SCORING &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 function calcTeamScore(team, isDouble) {
   const mult = TIERS[team] || 1;
   const r = RESULTS[team];
@@ -343,7 +343,7 @@ function calcScore(p) {
   return { total, breakdown, gbPts };
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ RENDER STANDINGS Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; RENDER STANDINGS &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 function renderStandings(ps) {
   if (!ps.length) {
     document.getElementById('standings-container').innerHTML = '<div class="info-box">No submissions yet. Share your pool form with friends to get started!</div>';
@@ -368,7 +368,7 @@ function renderStandings(ps) {
   document.getElementById('standings-container').innerHTML = html;
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ RENDER PICKS (locked before tournament) Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; RENDER PICKS (locked before tournament) &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 function renderPicks(ps) {
   const now = new Date();
   const locked = now < TOURNAMENT_START;
@@ -401,9 +401,9 @@ function renderPicks(ps) {
       <h3 onclick="togglePick(${idx})"><span>${esc(p.name)}</span><span>&#9660;</span></h3>
       <div id="pick-${idx}" class="pick-details">
         ${tKeys.map((k,ii) => p[k] ? `<div class="pick-item"><strong>${tLabels[ii]}</strong>${esc(p[k])}</div>` : '').join('')}
-        <div class="pick-item"><strong>Double Points</strong>${esc(p.double||'Ã¢ÂÂ')}</div>
-        <div class="pick-item"><strong>Golden Boot</strong>${esc(p.goldenBoot||'Ã¢ÂÂ')}</div>
-        <div class="pick-item"><strong>Tiebreaker</strong>${esc(p.tiebreaker||'Ã¢ÂÂ')}</div>
+        <div class="pick-item"><strong>Double Points</strong>${esc(p.double||'&mdash;')}</div>
+        <div class="pick-item"><strong>Golden Boot</strong>${esc(p.goldenBoot||'&mdash;')}</div>
+        <div class="pick-item"><strong>Tiebreaker</strong>${esc(p.tiebreaker||'&mdash;')}</div>
       </div>
     </div>`;
   });
@@ -412,7 +412,7 @@ function renderPicks(ps) {
 
 function togglePick(idx) { const el = document.getElementById('pick-' + idx); if (el) el.classList.toggle('open'); }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ RENDER TODAY'S SCORES Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; RENDER TODAY'S SCORES &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 function renderLatestFixtures(data) {
   const {yesterday, today, tomorrow} = data;
   const container = document.getElementById('fixtures-container');
@@ -451,15 +451,15 @@ function renderLatestFixtures(data) {
 
   let html = '';
   if (yesterday && yesterday.length) {
-    html += renderSection(yesterday, '&#9989; ' + fmtDay(yesterday[0].utcDate) + ' Ã¢ÂÂ Final Scores');
+    html += renderSection(yesterday, '&#9989; ' + fmtDay(yesterday[0].utcDate) + ' &mdash; Final Scores');
   }
   if (today && today.length) {
-    html += renderSection(today, '&#9917; ' + fmtDay(today[0].utcDate) + ' Ã¢ÂÂ Today');
+    html += renderSection(today, '&#9917; ' + fmtDay(today[0].utcDate) + ' &mdash; Today');
   } else {
     html += '<div class="info-box" style="margin-bottom:12px">No World Cup matches today.</div>';
   }
   if (tomorrow && tomorrow.length) {
-    html += renderSection(tomorrow, '&#128197; ' + fmtDay(tomorrow[0].utcDate) + ' Ã¢ÂÂ Upcoming');
+    html += renderSection(tomorrow, '&#128197; ' + fmtDay(tomorrow[0].utcDate) + ' &mdash; Upcoming');
   }
 
   if (!html) {
@@ -469,7 +469,7 @@ function renderLatestFixtures(data) {
   container.innerHTML = html;
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ RENDER GROUP STANDINGS Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; RENDER GROUP STANDINGS &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 function renderGroups(standings) {
   if (!standings || !standings.length) {
     document.getElementById('groups-container').innerHTML = '<div class="info-box">Group standings will update once the tournament begins.</div>';
@@ -492,7 +492,7 @@ function renderGroups(standings) {
   document.getElementById('groups-container').innerHTML = html;
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ API FETCHER Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; API FETCHER &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 async function apiGet(path) {
   try {
     const r = await fetch(PROXY + encodeURIComponent(API_BASE + path), { headers: {'X-Auth-Token': API_KEY} });
@@ -501,7 +501,7 @@ async function apiGet(path) {
   } catch(e) { return null; }
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ LOAD TOURNAMENT RESULTS Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; LOAD TOURNAMENT RESULTS &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 async function loadTournamentResults() {
   const data = await apiGet('/competitions/' + COMP + '/matches?status=FINISHED');
   if (!data || !data.matches) return;
@@ -536,7 +536,7 @@ async function loadTournamentResults() {
     }
   });
 
-  // Group finish Ã¢ÂÂ only assign if games have been played in that group
+  // Group finish &mdash; only assign if games have been played in that group
   const gs = await apiGet('/competitions/' + COMP + '/standings');
   if (gs && gs.standings) {
     const thirdPlaceTeams = [];
@@ -564,7 +564,7 @@ async function loadTournamentResults() {
     }
   }
 }
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ LOAD POOL DATA Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; LOAD POOL DATA &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 async function loadPoolData() {
   try {
     const r = await fetch(SHEET_CSV);
@@ -590,7 +590,7 @@ async function loadPoolData() {
   }
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ LOAD TODAY'S SCORES Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; LOAD TODAY'S SCORES &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 async function loadLatestFixtures() {
   // Use ET (America/New_York) for date boundaries so the calendar matches
   // what viewers in Eastern Time see, not UTC
@@ -631,7 +631,7 @@ async function loadLatestFixtures() {
   });
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ LOAD GROUP STANDINGS Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; LOAD GROUP STANDINGS &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 async function loadGroupStandings() {
   const data = await apiGet('/competitions/' + COMP + '/standings');
   if (!data) { document.getElementById('groups-container').innerHTML = '<div class="warn-box">Could not load group standings.</div>'; return; }
@@ -640,8 +640,8 @@ async function loadGroupStandings() {
   renderGroups(all);
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ MAIN Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂ LOAD GOLDEN BOOT Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// &#9472;&#9472;&#9472; MAIN &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
+// &#9472;&#9472;&#9472; LOAD GOLDEN BOOT &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
 async function loadGoldenBoot() {
   const el = document.getElementById('golden-boot-container');
   if (!el) return;
@@ -679,10 +679,10 @@ async function loadGoldenBoot() {
       const isLeader = i === 0;
       const pickerHtml = pickers.length
         ? pickers.map(n => `<span style="display:inline-block;background:var(--accent);color:#fff;border-radius:10px;padding:2px 8px;font-size:.75rem;margin:1px">${esc(n)}</span>`).join(' ')
-        : '<span style="color:var(--muted);font-size:.8rem">Ã¢ÂÂ</span>';
+        : '<span style="color:var(--muted);font-size:.8rem">&mdash;</span>';
       const rowStyle = isLeader ? ' style="background:#fffbeb"' : '';
       const rankBadge = `<span class="rank-badge${i < 3 ? ' rank-' + (i+1) : ''}">${i+1}</span>`;
-      html += `<tr${rowStyle}><td>${rankBadge}</td><td style="font-weight:600">${esc(name)}${isLeader ? ' Ã¢Â­Â' : ''}</td><td>${esc(team)}</td><td style="text-align:center;font-weight:700;font-size:1.05rem">${goals}</td><td style="text-align:center">${assists}</td><td>${pickerHtml}</td></tr>`;
+      html += `<tr${rowStyle}><td>${rankBadge}</td><td style="font-weight:600">${esc(name)}${isLeader ? ' &#11088;' : ''}</td><td>${esc(team)}</td><td style="text-align:center;font-weight:700;font-size:1.05rem">${goals}</td><td style="text-align:center">${assists}</td><td>${pickerHtml}</td></tr>`;
     });
 
     html += '</tbody></table>';
@@ -693,7 +693,7 @@ async function loadGoldenBoot() {
       if (!p.goldenBoot) return false;
       return data.scorers.some(s => (s.player?.name||'').toLowerCase().trim() === p.goldenBoot.toLowerCase().trim());
     }).length;
-    const summary = `<div class="info-box" style="margin-bottom:14px">Ã¢ÂÂ½ <strong>${totalPicked}</strong> participants have a golden boot pick. <strong>${inTop20}</strong> of those are in the top 20 scorers. Current leader: <strong>${esc(top.player?.name||'?')}</strong> (${top.goals ?? top.numberOfGoals ?? 0} goals).</div>`;
+    const summary = `<div class="info-box" style="margin-bottom:14px">&#9917; <strong>${totalPicked}</strong> participants have a golden boot pick. <strong>${inTop20}</strong> of those are in the top 20 scorers. Current leader: <strong>${esc(top.player?.name||'?')}</strong> (${top.goals ?? top.numberOfGoals ?? 0} goals).</div>`;
 
     el.innerHTML = summary + html;
   } catch(e) {
