@@ -510,8 +510,8 @@ async function loadTournamentResults() {
     const home = toPoolName(m.homeTeam?.name||''), away = toPoolName(m.awayTeam?.name||'');
     const hs = m.score?.fullTime?.home, as_ = m.score?.fullTime?.away;
     if (hs === null || as_ === null || hs === undefined) return;
-    if (!RESULTS[home]) RESULTS[home] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
-    if (!RESULTS[away]) RESULTS[away] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
+    if (!RESULTS[home]) RESULTS[home] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,r32:false,winner:false};
+    if (!RESULTS[away]) RESULTS[away] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,r32:false,winner:false};
     const stage = m.stage || '';
     if (stage === 'GROUP_STAGE') {
       RESULTS[home].gamesPlayed++;
@@ -520,19 +520,21 @@ async function loadTournamentResults() {
       else if (hs === as_) { RESULTS[home].matchPts += 1; RESULTS[away].matchPts += 1; }
       else RESULTS[away].matchPts += 3;
     }
-    const sm = {'ROUND_OF_16':'r16','QUARTER_FINALS':'qf','SEMI_FINALS':'sf','FINAL':'final','THIRD_PLACE':'sf'};
+    const sm = {
+      'ROUND_OF_32': 'r32',
+      'ROUND_OF_16': 'r16',
+      'QUARTER_FINALS': 'qf',
+      'SEMI_FINALS': 'sf',
+      'FINAL': 'winner',
+      'THIRD_PLACE': null
+    };
     const key = sm[stage];
-    if (key) {
-      RESULTS[home][key] = true; RESULTS[away][key] = true;
+    if (key !== undefined) {
       let win = null;
-      if (hs > as_) win = home; else if (as_ > hs) win = away;
+      if (hs > as_) win = home;
+      else if (as_ > hs) win = away;
       else { const p = m.score?.penalties; if (p) win = p.home > p.away ? home : away; }
-      if (win) {
-        if (stage === 'FINAL') RESULTS[win].winner = true;
-        else if (stage === 'ROUND_OF_16') RESULTS[win].qf = true;
-        else if (stage === 'QUARTER_FINALS') RESULTS[win].sf = true;
-        else if (stage === 'SEMI_FINALS') RESULTS[win].final = true;
-      }
+      if (win && key) RESULTS[win][key] = true;
     }
   });
 
@@ -544,10 +546,9 @@ async function loadTournamentResults() {
       if (group.type !== 'TOTAL') return;
       // Check if any team in this group has played a game
       const gamesPlayedInGroup = group.table.reduce((sum, e) => sum + (e.playedGames||0), 0);
-      if (gamesPlayedInGroup === 0) return; // No games yet, skip group finish assignment
-      group.table.forEach((e, i) => {
+      if (gamesPlayedInGroup === 0) return; // No games yet, skip group finish r32:false,winner:falseable.forEach((e, i) => {
         const t = toPoolName(e.team?.name||'');
-        if (!RESULTS[t]) RESULTS[t] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,final:false,winner:false};
+        if (!RESULTS[t]) RESULTS[t] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,r32:false,winner:false};
         RESULTS[t].groupFinish = i + 1;
         RESULTS[t].gamesPlayed = e.playedGames || 0;
         if (i === 2) {
