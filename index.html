@@ -318,10 +318,10 @@ function calcTeamScore(team, isDouble) {
     else if (r.groupFinish === 3) pts += 1;
   }
   // Knockout bonuses
-  if (r.r16) pts += 5;
-  if (r.qf) pts += 10;
-  if (r.sf) pts += 15;
-  if (r.final) pts += 20;
+  if (r.r32) pts += 5;
+  if (r.r16) pts += 10;
+  if (r.qf) pts += 15;
+  if (r.sf) pts += 20;
   if (r.winner) pts += 30;
   // Tier multiplier and double-pts apply to ALL points
   return { pts, multiplied: pts * mult * (isDouble ? 2 : 1) };
