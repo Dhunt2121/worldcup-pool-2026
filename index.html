@@ -546,7 +546,8 @@ async function loadTournamentResults() {
       if (group.type !== 'TOTAL') return;
       // Check if any team in this group has played a game
       const gamesPlayedInGroup = group.table.reduce((sum, e) => sum + (e.playedGames||0), 0);
-      if (gamesPlayedInGroup === 0) return; // No games yet, skip group finish r32:false,winner:falseable.forEach((e, i) => {
+      if (gamesPlayedInGroup === 0) return; // No games yet, skip group finish assignment
+      group.table.forEach((e, i) => {
         const t = toPoolName(e.team?.name||'');
         if (!RESULTS[t]) RESULTS[t] = {matchPts:0,gamesPlayed:0,groupFinish:null,r16:false,qf:false,sf:false,r32:false,winner:false};
         RESULTS[t].groupFinish = i + 1;
